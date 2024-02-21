@@ -10,9 +10,9 @@ class PessoaApiClient {
     final response = await http.get(Uri.parse(apiUrl));
     if (response.statusCode == 200) {
 
-      var json = jsonDecode(response.body);
+      var jsonBody = jsonDecode(response.body);
 
-      var listaPessoa = List<Pessoa>.from(json.map((pessoa) => Pessoa.fromJson(pessoa)));
+      var listaPessoa = List<Pessoa>.from(jsonBody.map((pessoa) => Pessoa.fromJson(pessoa)));
 
 
       return listaPessoa;
