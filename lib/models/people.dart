@@ -1,16 +1,16 @@
-class Pessoa {
+class People {
   String? id;
   String? name;
   String? email;
   String? details;
 
-  Pessoa(
+  People(
       {required this.id,
       required this.name,
       required this.email,
       required this.details});
 
-  factory Pessoa.fromJson(Map<String, dynamic> json) {
+  factory People.fromJson(Map<String, dynamic> json) {
     return switch (json) {
       {
         'id': String id,
@@ -18,7 +18,7 @@ class Pessoa {
         'email': String email,
         'details': String details,
       } =>
-        Pessoa(
+        People(
           id: id,
           name: name,
           email: email,

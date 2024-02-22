@@ -1,19 +1,18 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import 'package:cadastro_pessoa/models/pessoa.dart';
+import 'package:cadastro_pessoa/models/people.dart';
 
-class PessoaApiClient {
+class PeopleApiClient {
   String apiUrl =
       'https://659d7e20633f9aee790986a9.mockapi.io/api/crud_teste/pessoa';
-  Future<List<Pessoa>> fetchPessoas() async {
+  Future<List<People>> fetchPessoas() async {
     final response = await http.get(Uri.parse(apiUrl));
     if (response.statusCode == 200) {
-
       var jsonBody = jsonDecode(response.body);
 
-      var listaPessoa = List<Pessoa>.from(jsonBody.map((pessoa) => Pessoa.fromJson(pessoa)));
-
+      var listaPessoa =
+          List<People>.from(jsonBody.map((pessoa) => People.fromJson(pessoa)));
 
       return listaPessoa;
     } else {
@@ -21,8 +20,8 @@ class PessoaApiClient {
     }
   }
 
-  Future<Pessoa> createPessoa(
-      {required int id,
+  Future<People> createPessoa(
+      {required String id,
       required String name,
       required String email,
       required String details}) async {
@@ -39,13 +38,13 @@ class PessoaApiClient {
       }),
     );
     if (response.statusCode == 201) {
-      return Pessoa.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      return People.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
     } else {
       throw Exception('Falha ao criar Pessoa');
     }
   }
 
-  Future<Pessoa> updatePessoa(
+  Future<People> updatePessoa(
       {required int id,
       required String name,
       required String email,
@@ -63,13 +62,13 @@ class PessoaApiClient {
       }),
     );
     if (response.statusCode == 200) {
-      return Pessoa.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      return People.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
     } else {
       throw Exception('Falha ao atualizar Pessoa');
     }
   }
 
-  Future<Pessoa> deletePessoa(int id) async {
+  Future<People> deletePessoa(int id) async {
     final http.Response response = await http.delete(
       Uri.parse('apiUrl/$id'),
       headers: <String, String>{
@@ -77,7 +76,7 @@ class PessoaApiClient {
       },
     );
     if (response.statusCode == 200) {
-      return Pessoa.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      return People.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
     } else {
       throw Exception('Falha ao deletar Pessoa');
     }
