@@ -23,6 +23,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: "Pessoas",
       home: Scaffold(
         appBar: AppBar(
@@ -33,6 +34,7 @@ class _HomePageState extends State<HomePage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
+                itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   return PeopleCard(
                       id: snapshot.data![index].id!,

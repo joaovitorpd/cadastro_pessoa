@@ -1,13 +1,12 @@
-import 'package:cadastro_pessoa/pages/people_detail_page.dart';
 import 'package:flutter/material.dart';
 
 class PeopleDetailedCard extends StatelessWidget {
-  String? id;
-  String? name;
-  String? email;
-  String? details;
+  final String? id;
+  final String? name;
+  final String? email;
+  final String? details;
 
-  PeopleDetailedCard(
+  const PeopleDetailedCard(
       {super.key,
       required this.id,
       required this.name,
