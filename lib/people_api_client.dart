@@ -49,8 +49,8 @@ class PeopleApiClient {
       required String name,
       required String email,
       required String details}) async {
-    final response = await http.post(
-      Uri.parse(apiUrl),
+    final response = await http.put(
+      Uri.parse("$apiUrl/$id"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

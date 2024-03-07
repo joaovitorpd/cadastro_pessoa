@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class PeopleDetailedCard extends StatelessWidget {
@@ -15,6 +17,18 @@ class PeopleDetailedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double lineHight = 10;
+    double fontSize = 16;
+    double cardWidth;
+
+    if (Platform.isAndroid) {
+      cardWidth = 0.75;
+    } else if (Platform.isIOS) {
+      cardWidth = 0.8;
+    } else {
+      cardWidth = 0.75;
+    }
+
     return GestureDetector(
       /* onTap: () {
         Navigator.push(
@@ -42,7 +56,7 @@ class PeopleDetailedCard extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    width: MediaQuery.of(context).size.width * 0.8,
+                    width: MediaQuery.of(context).size.width * cardWidth,
                     margin: const EdgeInsets.all(1),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,28 +64,37 @@ class PeopleDetailedCard extends StatelessWidget {
                         name != null
                             ? Text(
                                 "Id: $id",
-                                style: const TextStyle(fontSize: 18),
+                                style: TextStyle(fontSize: fontSize),
                                 textAlign: TextAlign.start,
                               )
                             : const Text("Sem id registrado"),
+                        SizedBox(
+                          height: lineHight,
+                        ),
                         name != null
                             ? Text(
                                 "Nome: $name",
-                                style: const TextStyle(fontSize: 18),
+                                style: TextStyle(fontSize: fontSize),
                                 textAlign: TextAlign.start,
                               )
                             : const Text("Sem nome registrado"),
+                        SizedBox(
+                          height: lineHight,
+                        ),
                         email != null
                             ? Text(
                                 "Email: $email",
-                                style: const TextStyle(fontSize: 18),
+                                style: TextStyle(fontSize: fontSize),
                                 textAlign: TextAlign.start,
                               )
                             : const Text("Sem email registrado"),
+                        SizedBox(
+                          height: lineHight,
+                        ),
                         details != null
                             ? Text(
                                 "Descrição: $details",
-                                style: const TextStyle(fontSize: 18),
+                                style: TextStyle(fontSize: fontSize),
                                 textAlign: TextAlign.start,
                               )
                             : const Text("Sem detalhe registrado"),
