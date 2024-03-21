@@ -2,17 +2,17 @@ import 'package:cadastro_pessoa/pages/people_detail_page.dart';
 import 'package:flutter/material.dart';
 
 class PeopleCard extends StatelessWidget {
-  String? id;
-  String? name;
-  String? email;
-  String? details;
-
-  PeopleCard(
+  const PeopleCard(
       {super.key,
       required this.id,
       required this.name,
       required this.email,
       required this.details});
+
+  final String? id;
+  final String? name;
+  final String? email;
+  final String? details;
 
   @override
   Widget build(BuildContext context) {

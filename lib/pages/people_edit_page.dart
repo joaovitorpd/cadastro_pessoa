@@ -1,11 +1,11 @@
-import 'package:cadastro_pessoa/cards/people_detailed_card.dart';
-import 'package:cadastro_pessoa/pages/people_edit_page.dart';
+import 'dart:io';
+
+import 'package:cadastro_pessoa/cards/people_edit_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:io' show Platform;
 
-class PeopleDetailPage extends StatelessWidget {
-  const PeopleDetailPage(
+class PeopleEditPage extends StatefulWidget {
+  const PeopleEditPage(
       {super.key,
       required this.id,
       required this.name,
@@ -18,11 +18,30 @@ class PeopleDetailPage extends StatelessWidget {
   final String? details;
 
   @override
+  State<PeopleEditPage> createState() => _PeopleEditPageState();
+}
+
+class _PeopleEditPageState extends State<PeopleEditPage> {
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final detailsController = TextEditingController();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    detailsController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    String? name = widget.name;
+
     if (Platform.isAndroid) {
       return Scaffold(
         appBar: AppBar(
-          title: Text("Detalhes de $name"),
+          title: Text("Editar dados de: \n$name"),
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -32,21 +51,20 @@ class PeopleDetailPage extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => PeopleEditPage(
-                            id: id,
-                            name: name,
-                            email: email,
-                            details: details)));
+                Navigator.pop(context);
               },
-              child: const Text("Editar"),
+              child: const Text("Salvar"),
             ),
           ],
         ),
-        body: PeopleDetailedCard(
-            id: id, name: name, email: email, details: details),
+        body: PeopleEditCard(
+            id: widget.id,
+            name: widget.name,
+            email: widget.email,
+            details: widget.details,
+            nameController: nameController,
+            emailController: emailController,
+            detailsController: detailsController),
       );
     } else if (Platform.isIOS) {
       return CupertinoPageScaffold(
@@ -61,23 +79,25 @@ class PeopleDetailPage extends StatelessWidget {
               Navigator.pop(context);
             },
           ),
-          middle: Text("Detalhes de $name"),
+          middle: Text("Editar dados de: \n$name"),
           trailing: CupertinoButton(
             alignment: Alignment.center,
             padding: const EdgeInsets.all(1),
             child: const Text("Editar"),
             onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => PeopleEditPage(
-                          id: id, name: name, email: email, details: details)));
+              Navigator.pop(context);
             },
           ),
         ),
         child: SafeArea(
-          child: PeopleDetailedCard(
-              id: id, name: name, email: email, details: details),
+          child: PeopleEditCard(
+              id: widget.id,
+              name: widget.name,
+              email: widget.email,
+              details: widget.details,
+              nameController: nameController,
+              emailController: emailController,
+              detailsController: detailsController),
         ),
       );
     } else {
