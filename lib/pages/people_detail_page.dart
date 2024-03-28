@@ -51,7 +51,7 @@ class _PeopleDetailPageState extends State<PeopleDetailPage> {
           actions: [
             TextButton(
               onPressed: () async {
-                await Navigator.push<People>(
+                Navigator.push<People>(
                     context,
                     MaterialPageRoute(
                         builder: (context) => PeopleEditPage(
