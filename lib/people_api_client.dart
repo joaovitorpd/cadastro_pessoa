@@ -20,21 +20,17 @@ class PeopleApiClient {
     }
   }
 
-  Future<People> createPessoa(
-      {required String id,
-      required String name,
-      required String email,
-      required String details}) async {
+  Future<People> createPessoa({required People pessoa}) async {
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, dynamic>{
-        'id': id,
-        'name': name,
-        'email': email,
-        'details': details,
+        'id': pessoa.id,
+        'name': pessoa.name,
+        'email': pessoa.email,
+        'details': pessoa.details,
       }),
     );
     if (response.statusCode == 201) {
@@ -44,21 +40,17 @@ class PeopleApiClient {
     }
   }
 
-  Future<People> updatePessoa(
-      {required int id,
-      required String name,
-      required String email,
-      required String details}) async {
+  Future<People> updatePessoa({required People pessoa}) async {
     final response = await http.put(
-      Uri.parse("$apiUrl/$id"),
+      Uri.parse("$apiUrl/${pessoa.id}"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, dynamic>{
-        'id': id,
-        'name': name,
-        'email': email,
-        'details': details,
+        'id': pessoa.id,
+        'name': pessoa.name,
+        'email': pessoa.email,
+        'details': pessoa.details,
       }),
     );
     if (response.statusCode == 200) {
@@ -68,9 +60,9 @@ class PeopleApiClient {
     }
   }
 
-  Future<People> deletePessoa(int id) async {
+  Future<People> deletePessoa(final People pessoa) async {
     final http.Response response = await http.delete(
-      Uri.parse('apiUrl/$id'),
+      Uri.parse('apiUrl/${pessoa.id}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

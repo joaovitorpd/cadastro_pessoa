@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField(
@@ -19,16 +18,16 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var controller = TextEditingController(text: value);
+    controller.text = value!;
 
     if (Platform.isIOS) {
       return CupertinoTextFormFieldRow(
         prefix: Text(label.toString()),
         controller: controller,
         placeholder: label!,
-        inputFormatters: [
+        /* inputFormatters: [
           FilteringTextInputFormatter.digitsOnly,
-        ],
+        ], */
       );
     } else {
       return TextFormField(
@@ -36,9 +35,9 @@ class CustomTextField extends StatelessWidget {
         decoration: InputDecoration(
           labelText: label,
         ),
-        inputFormatters: [
+        /* inputFormatters: [
           FilteringTextInputFormatter.digitsOnly,
-        ],
+        ], */
       );
     }
   }

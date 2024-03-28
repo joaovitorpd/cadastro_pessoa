@@ -1,5 +1,6 @@
 import 'package:cadastro_pessoa/cards/people_card.dart';
 import 'package:cadastro_pessoa/models/people.dart';
+import 'package:cadastro_pessoa/pages/people_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cadastro_pessoa/people_api_client.dart';
 
@@ -11,6 +12,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late People pessoa;
   late Future<List<People>> pessoas;
   final PeopleApiClient pessoaApiClient = PeopleApiClient();
 
@@ -22,32 +24,47 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "Pessoas",
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text("Cadastro de Pessoas"),
-        ),
-        body: FutureBuilder(
-          future: pessoas,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  return PeopleCard(
-                      id: snapshot.data![index].id!,
-                      name: snapshot.data![index].name!,
-                      email: snapshot.data![index].email!,
-                      details: snapshot.data![index].details!);
-                },
-              );
-            } else {
-              return const Text("Não tem dados");
-            }
-          },
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Cadastro de Pessoas"),
+      ),
+      body: FutureBuilder(
+        future: pessoas,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () async {
+                    pessoa = snapshot.data![index];
+                    await Navigator.push<People>(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PeopleDetailPage(
+                                  pessoa: pessoa,
+                                  pessoaApiClient: pessoaApiClient,
+                                ))).then((result) => {
+                          setState(() {
+                            setState(() {
+                              if (result != null) {
+                                pessoa = result;
+                              }
+                            });
+                          })
+                        });
+                  },
+                  child: PeopleCard(
+                    pessoa: snapshot.data![index],
+                    pessoaApiClient: pessoaApiClient,
+                  ),
+                );
+              },
+            );
+          } else {
+            return const Text("Não tem dados");
+          }
+        },
       ),
     );
   }

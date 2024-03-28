@@ -1,19 +1,15 @@
 import 'dart:io';
 
+import 'package:cadastro_pessoa/models/people.dart';
+import 'package:cadastro_pessoa/people_api_client.dart';
 import 'package:flutter/material.dart';
 
 class PeopleDetailedCard extends StatelessWidget {
-  final String? id;
-  final String? name;
-  final String? email;
-  final String? details;
-
   const PeopleDetailedCard(
-      {super.key,
-      required this.id,
-      required this.name,
-      required this.email,
-      required this.details});
+      {super.key, required this.pessoa, required this.pessoaApiClient});
+
+  final People pessoa;
+  final PeopleApiClient pessoaApiClient;
 
   @override
   Widget build(BuildContext context) {
@@ -61,9 +57,9 @@ class PeopleDetailedCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        name != null
+                        pessoa.name != null
                             ? Text(
-                                "Id: $id",
+                                "Id: ${pessoa.id}",
                                 style: TextStyle(fontSize: fontSize),
                                 textAlign: TextAlign.start,
                               )
@@ -71,9 +67,9 @@ class PeopleDetailedCard extends StatelessWidget {
                         SizedBox(
                           height: lineHight,
                         ),
-                        name != null
+                        pessoa.name != null
                             ? Text(
-                                "Nome: $name",
+                                "Nome: ${pessoa.name}",
                                 style: TextStyle(fontSize: fontSize),
                                 textAlign: TextAlign.start,
                               )
@@ -81,9 +77,9 @@ class PeopleDetailedCard extends StatelessWidget {
                         SizedBox(
                           height: lineHight,
                         ),
-                        email != null
+                        pessoa.email != null
                             ? Text(
-                                "Email: $email",
+                                "Email: ${pessoa.email}",
                                 style: TextStyle(fontSize: fontSize),
                                 textAlign: TextAlign.start,
                               )
@@ -91,9 +87,9 @@ class PeopleDetailedCard extends StatelessWidget {
                         SizedBox(
                           height: lineHight,
                         ),
-                        details != null
+                        pessoa.details != null
                             ? Text(
-                                "Descrição: $details",
+                                "Descrição: ${pessoa.details}",
                                 style: TextStyle(fontSize: fontSize),
                                 textAlign: TextAlign.start,
                               )
