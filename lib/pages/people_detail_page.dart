@@ -1,4 +1,3 @@
-import 'package:brasil_fields/brasil_fields.dart';
 import 'package:cadastro_pessoa/cards/people_detailed_card.dart';
 import 'package:cadastro_pessoa/models/people.dart';
 import 'package:cadastro_pessoa/pages/people_edit_page.dart';

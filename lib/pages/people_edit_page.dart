@@ -69,11 +69,12 @@ class _PeopleEditPageState extends State<PeopleEditPage> {
               await widget.pessoaApiClient.updatePessoa(
                 pessoa: widget.pessoa,
               );
-              Navigator.pop(context, widget.pessoa);
+              if (context.mounted) Navigator.pop(context, widget.pessoa);
             } on Exception catch (e) {
-              if (!mounted) return;
               var snackbar = SnackBar(content: Text(e.toString()));
-              ScaffoldMessenger.of(context).showSnackBar(snackbar);
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(snackbar);
+              }
             }
           },
         ),
@@ -104,23 +105,27 @@ class _PeopleEditPageState extends State<PeopleEditPage> {
                 await widget.pessoaApiClient.updatePessoa(
                   pessoa: widget.pessoa,
                 );
-                Navigator.pop(context, widget.pessoa);
+                if (context.mounted) {
+                  Navigator.pop(context, widget.pessoa);
+                }
               } on Exception catch (e) {
-                showCupertinoModalPopup<void>(
-                  context: context,
-                  builder: (BuildContext context) => CupertinoAlertDialog(
-                    title: const Text("Erro!"),
-                    content: Text(e.toString()),
-                    actions: <CupertinoDialogAction>[
-                      CupertinoDialogAction(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text("OK"),
-                      ),
-                    ],
-                  ),
-                );
+                if (context.mounted) {
+                  showCupertinoModalPopup<void>(
+                    context: context,
+                    builder: (BuildContext context) => CupertinoAlertDialog(
+                      title: const Text("Erro!"),
+                      content: Text(e.toString()),
+                      actions: <CupertinoDialogAction>[
+                        CupertinoDialogAction(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text("OK"),
+                        ),
+                      ],
+                    ),
+                  );
+                }
               }
             },
           ),
