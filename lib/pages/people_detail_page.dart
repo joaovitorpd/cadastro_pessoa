@@ -2,8 +2,10 @@ import 'package:cadastro_pessoa/cards/people_detailed_card.dart';
 import 'package:cadastro_pessoa/models/people.dart';
 import 'package:cadastro_pessoa/pages/people_edit_page.dart';
 import 'package:cadastro_pessoa/people_api_client.dart';
+import 'package:cadastro_pessoa/widgets/menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pull_down_button/pull_down_button.dart';
 import 'dart:io' show Platform;
 
 class PeopleDetailPage extends StatefulWidget {
@@ -54,6 +56,7 @@ class _PeopleDetailPageState extends State<PeopleDetailPage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => PeopleEditPage(
+                              isCreate: false,
                               pessoa: _editedPessoa,
                               pessoaApiClient: widget.pessoaApiClient,
                             ))).then((result) {
@@ -74,36 +77,29 @@ class _PeopleDetailPageState extends State<PeopleDetailPage> {
     } else if (Platform.isIOS) {
       return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
-          leading: CupertinoButton(
-            padding: const EdgeInsets.all(1),
-            child: const Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
+            leading: CupertinoButton(
+              padding: const EdgeInsets.all(1),
+              child: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.pop(context, widget.pessoa);
+              },
             ),
-            onPressed: () {
-              Navigator.pop(context, widget.pessoa);
-            },
-          ),
-          middle: Text("Detalhes de ${widget.pessoa.name}"),
-          trailing: CupertinoButton(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.all(1),
-            child: const Text("Editar"),
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => PeopleEditPage(
-                            pessoa: _editedPessoa,
-                            pessoaApiClient: widget.pessoaApiClient,
-                          ))).then((result) {
-                if (result != null) {
-                  _updatedPessoa(result);
-                }
-              });
-            },
-          ),
-        ),
+            middle: Text("Detalhes de ${widget.pessoa.name}"),
+            trailing: Menu(
+                builder: (_, showMenu) => CupertinoButton(
+                      onPressed: showMenu,
+                      padding: EdgeInsets.zero,
+                      pressedOpacity: 1,
+                      child: const Icon(CupertinoIcons.ellipsis_circle),
+                    ),
+                pessoa: widget.pessoa,
+                pessoaApiClient: widget.pessoaApiClient,
+                callback: (pessoa) {
+                  _updatedPessoa(pessoa);
+                })),
         child: SafeArea(
           child: PeopleDetailedCard(
             pessoa: widget.pessoa,

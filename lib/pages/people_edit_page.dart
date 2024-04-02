@@ -9,11 +9,13 @@ import 'package:flutter/material.dart';
 class PeopleEditPage extends StatefulWidget {
   const PeopleEditPage({
     super.key,
-    required this.pessoa,
+    required this.isCreate,
+    this.pessoa,
     required this.pessoaApiClient,
   });
 
-  final People pessoa;
+  final bool isCreate;
+  final People? pessoa;
   final PeopleApiClient pessoaApiClient;
 
   @override
@@ -28,7 +30,11 @@ class _PeopleEditPageState extends State<PeopleEditPage> {
   @override
   void initState() {
     super.initState();
-    nameController.text = widget.pessoa.name!;
+    if (widget.isCreate) {
+      nameController.text = "";
+      emailController.text = widget.isCreate ? "" : widget.pessoa!.email!;
+      detailsController.text = widget.isCreate ? "" : widget.pessoa!.name!;
+    }
   }
 
   @override
@@ -44,7 +50,9 @@ class _PeopleEditPageState extends State<PeopleEditPage> {
     if (Platform.isAndroid) {
       return Scaffold(
         appBar: AppBar(
-          title: Text("Editar dados de: \n${widget.pessoa.name}"),
+          title: widget.isCreate
+              ? const Text("Cadastro:")
+              : Text("Editar dados de: \n${widget.pessoa!.name}"),
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -53,7 +61,7 @@ class _PeopleEditPageState extends State<PeopleEditPage> {
           ),
         ),
         body: PeopleEditCard(
-            pessoa: widget.pessoa,
+            pessoa: widget.pessoa!,
             pessoaApiClient: widget.pessoaApiClient,
             nameController: nameController,
             emailController: emailController,
@@ -61,19 +69,33 @@ class _PeopleEditPageState extends State<PeopleEditPage> {
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.save),
           onPressed: () async {
-            widget.pessoa.name = nameController.text;
-            widget.pessoa.email = emailController.text;
-            widget.pessoa.details = detailsController.text;
+            widget.pessoa!.name = nameController.text;
+            widget.pessoa!.email = emailController.text;
+            widget.pessoa!.details = detailsController.text;
 
-            try {
-              await widget.pessoaApiClient.updatePessoa(
-                pessoa: widget.pessoa,
-              );
-              if (context.mounted) Navigator.pop(context, widget.pessoa);
-            } on Exception catch (e) {
-              var snackbar = SnackBar(content: Text(e.toString()));
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(snackbar);
+            if (widget.isCreate) {
+              try {
+                await widget.pessoaApiClient.createPessoa(
+                  pessoa: widget.pessoa!,
+                );
+                if (context.mounted) Navigator.pop(context, widget.pessoa);
+              } on Exception catch (e) {
+                var snackbar = SnackBar(content: Text(e.toString()));
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                }
+              }
+            } else {
+              try {
+                await widget.pessoaApiClient.updatePessoa(
+                  pessoa: widget.pessoa!,
+                );
+                if (context.mounted) Navigator.pop(context, widget.pessoa);
+              } on Exception catch (e) {
+                var snackbar = SnackBar(content: Text(e.toString()));
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                }
               }
             }
           },
@@ -92,39 +114,70 @@ class _PeopleEditPageState extends State<PeopleEditPage> {
               Navigator.pop(context);
             },
           ),
-          middle: Text("Editar dados de: \n${widget.pessoa.name}"),
+          middle: widget.isCreate
+              ? const Text("Cadastro:")
+              : Text("Editar dados de: \n${widget.pessoa!.name}"),
           trailing: CupertinoButton(
             alignment: Alignment.center,
             padding: const EdgeInsets.all(1),
             child: const Text("Salvar"),
             onPressed: () async {
-              widget.pessoa.name = nameController.text;
-              widget.pessoa.email = emailController.text;
-              widget.pessoa.details = detailsController.text;
-              try {
-                await widget.pessoaApiClient.updatePessoa(
-                  pessoa: widget.pessoa,
-                );
-                if (context.mounted) {
-                  Navigator.pop(context, widget.pessoa);
-                }
-              } on Exception catch (e) {
-                if (context.mounted) {
-                  showCupertinoModalPopup<void>(
-                    context: context,
-                    builder: (BuildContext context) => CupertinoAlertDialog(
-                      title: const Text("Erro!"),
-                      content: Text(e.toString()),
-                      actions: <CupertinoDialogAction>[
-                        CupertinoDialogAction(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text("OK"),
-                        ),
-                      ],
-                    ),
+              widget.pessoa!.name = nameController.text;
+              widget.pessoa!.email = emailController.text;
+              widget.pessoa!.details = detailsController.text;
+              if (widget.isCreate) {
+                try {
+                  await widget.pessoaApiClient.createPessoa(
+                    pessoa: widget.pessoa!,
                   );
+                  if (context.mounted) {
+                    Navigator.pop(context, widget.pessoa);
+                  }
+                } on Exception catch (e) {
+                  if (context.mounted) {
+                    showCupertinoModalPopup<void>(
+                      context: context,
+                      builder: (BuildContext context) => CupertinoAlertDialog(
+                        title: const Text("Erro!"),
+                        content: Text(e.toString()),
+                        actions: <CupertinoDialogAction>[
+                          CupertinoDialogAction(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text("OK"),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                }
+              } else {
+                try {
+                  await widget.pessoaApiClient.updatePessoa(
+                    pessoa: widget.pessoa!,
+                  );
+                  if (context.mounted) {
+                    Navigator.pop(context, widget.pessoa);
+                  }
+                } on Exception catch (e) {
+                  if (context.mounted) {
+                    showCupertinoModalPopup<void>(
+                      context: context,
+                      builder: (BuildContext context) => CupertinoAlertDialog(
+                        title: const Text("Erro!"),
+                        content: Text(e.toString()),
+                        actions: <CupertinoDialogAction>[
+                          CupertinoDialogAction(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text("OK"),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
                 }
               }
             },
@@ -132,7 +185,7 @@ class _PeopleEditPageState extends State<PeopleEditPage> {
         ),
         child: SafeArea(
           child: PeopleEditCard(
-              pessoa: widget.pessoa,
+              pessoa: widget.pessoa!,
               pessoaApiClient: widget.pessoaApiClient,
               nameController: nameController,
               emailController: emailController,
