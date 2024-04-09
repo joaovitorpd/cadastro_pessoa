@@ -41,7 +41,66 @@ class Menu extends StatelessWidget {
           icon: CupertinoIcons.pencil,
         ),
         PullDownMenuItem(
-          onTap: () {},
+          onTap: () {
+            if (context.mounted) {
+              showCupertinoModalPopup<void>(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (BuildContext context) => CupertinoAlertDialog(
+                        title: const Text("Atenção!!!",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
+                            )),
+                        content: const Text("Tem certeza que deseja apagar?"),
+                        actions: <CupertinoDialogAction>[
+                          CupertinoDialogAction(
+                            child: const Text("Não"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                          CupertinoDialogAction(
+                            isDestructiveAction: true,
+                            child: const Text(
+                              "Sim",
+                            ),
+                            onPressed: () async {
+                              try {
+                                await pessoaApiClient.deletePessoa(
+                                    pessoa: pessoa);
+                                if (context.mounted) {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                }
+                              } on Exception catch (e) {
+                                if (context.mounted) {
+                                  showCupertinoModalPopup<void>(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        CupertinoAlertDialog(
+                                      title: const Text("Erro!"),
+                                      content: Text(e.toString()),
+                                      actions: <CupertinoDialogAction>[
+                                        CupertinoDialogAction(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text("OK"),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                          ),
+                        ],
+                      ));
+            }
+          },
           title: "Delete",
           isDestructive: true,
           icon: CupertinoIcons.delete,

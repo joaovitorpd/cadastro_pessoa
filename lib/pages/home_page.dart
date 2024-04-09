@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    pessoas = pessoaApiClient.fetchPessoas();
+    //pessoas = pessoaApiClient.fetchPessoas();
   }
 
   @override
@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         child: FutureBuilder(
-          future: pessoas,
+          future: pessoaApiClient.fetchPessoas(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(

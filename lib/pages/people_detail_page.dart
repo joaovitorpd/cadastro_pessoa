@@ -5,7 +5,6 @@ import 'package:cadastro_pessoa/people_api_client.dart';
 import 'package:cadastro_pessoa/widgets/menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pull_down_button/pull_down_button.dart';
 import 'dart:io' show Platform;
 
 class PeopleDetailPage extends StatefulWidget {

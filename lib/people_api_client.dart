@@ -60,17 +60,15 @@ class PeopleApiClient {
     }
   }
 
-  Future<People> deletePessoa(final People pessoa) async {
-    final http.Response response = await http.delete(
-      Uri.parse('apiUrl/${pessoa.id}'),
+  Future<void> deletePessoa({required People pessoa}) async {
+    final response = await http.delete(
+      Uri.parse("$apiUrl/${pessoa.id}"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
-    if (response.statusCode == 200) {
-      return People.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
-    } else {
-      throw Exception('Falha ao deletar Pessoa');
+    if (response.statusCode != 200) {
+      throw Exception('Falha ao deletar Pessoa!');
     }
   }
 }
