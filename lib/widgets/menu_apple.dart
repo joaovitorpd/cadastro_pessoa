@@ -5,8 +5,8 @@ import 'package:cadastro_pessoa/models/people.dart';
 import 'package:cadastro_pessoa/pages/people_edit_page.dart';
 import 'package:cadastro_pessoa/people_api_client.dart';
 
-class Menu extends StatelessWidget {
-  const Menu(
+class MenuApple extends StatelessWidget {
+  const MenuApple(
       {super.key,
       required this.builder,
       required this.pessoa,

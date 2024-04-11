@@ -47,61 +47,7 @@ class _PeopleEditPageState extends State<PeopleEditPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isAndroid) {
-      return Scaffold(
-        appBar: AppBar(
-          title: widget.isCreate
-              ? const Text("Cadastro:")
-              : Text("Editar dados de: \n${widget.pessoa!.name}"),
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back),
-          ),
-        ),
-        body: PeopleEditCard(
-            pessoa: widget.pessoa!,
-            pessoaApiClient: widget.pessoaApiClient,
-            nameController: nameController,
-            emailController: emailController,
-            detailsController: detailsController),
-        floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.save),
-          onPressed: () async {
-            widget.pessoa!.name = nameController.text;
-            widget.pessoa!.email = emailController.text;
-            widget.pessoa!.details = detailsController.text;
-
-            if (widget.isCreate) {
-              try {
-                await widget.pessoaApiClient.createPessoa(
-                  pessoa: widget.pessoa!,
-                );
-                if (context.mounted) Navigator.pop(context, widget.pessoa);
-              } on Exception catch (e) {
-                var snackbar = SnackBar(content: Text(e.toString()));
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(snackbar);
-                }
-              }
-            } else {
-              try {
-                await widget.pessoaApiClient.updatePessoa(
-                  pessoa: widget.pessoa!,
-                );
-                if (context.mounted) Navigator.pop(context, widget.pessoa);
-              } on Exception catch (e) {
-                var snackbar = SnackBar(content: Text(e.toString()));
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(snackbar);
-                }
-              }
-            }
-          },
-        ),
-      );
-    } else if (Platform.isIOS) {
+    if (Platform.isIOS) {
       return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
           leading: CupertinoButton(
@@ -193,7 +139,59 @@ class _PeopleEditPageState extends State<PeopleEditPage> {
         ),
       );
     } else {
-      return const Text("No valid platform");
-    }
+      return Scaffold(
+        appBar: AppBar(
+          title: widget.isCreate
+              ? const Text("Cadastro:")
+              : Text("Editar dados de: \n${widget.pessoa!.name}"),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back),
+          ),
+        ),
+        body: PeopleEditCard(
+            pessoa: widget.pessoa!,
+            pessoaApiClient: widget.pessoaApiClient,
+            nameController: nameController,
+            emailController: emailController,
+            detailsController: detailsController),
+        floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.save),
+          onPressed: () async {
+            widget.pessoa!.name = nameController.text;
+            widget.pessoa!.email = emailController.text;
+            widget.pessoa!.details = detailsController.text;
+
+            if (widget.isCreate) {
+              try {
+                await widget.pessoaApiClient.createPessoa(
+                  pessoa: widget.pessoa!,
+                );
+                if (context.mounted) Navigator.pop(context, widget.pessoa);
+              } on Exception catch (e) {
+                var snackbar = SnackBar(content: Text(e.toString()));
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                }
+              }
+            } else {
+              try {
+                await widget.pessoaApiClient.updatePessoa(
+                  pessoa: widget.pessoa!,
+                );
+                if (context.mounted) Navigator.pop(context, widget.pessoa);
+              } on Exception catch (e) {
+                var snackbar = SnackBar(content: Text(e.toString()));
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                }
+              }
+            }
+          },
+        ),
+      );
+    } 
   }
 }

@@ -23,7 +23,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    //pessoas = pessoaApiClient.fetchPessoas();
   }
 
   @override
@@ -46,90 +45,110 @@ class _HomePageState extends State<HomePage> {
                             pessoaApiClient: pessoaApiClient,
                           ))).then((result) {
                 setState(() {
-                  if (result != null) {
-                    pessoas = pessoaApiClient.fetchPessoas();
-                  }
                 });
               });
             },
           ),
         ),
-        child: FutureBuilder(
-          future: pessoaApiClient.fetchPessoas(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () async {
-                      pessoa = snapshot.data![index];
-                      await Navigator.push<People>(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PeopleDetailPage(
-                                    pessoa: pessoa,
-                                    pessoaApiClient: pessoaApiClient,
-                                  ))).then((result) => {
-                            setState(() {
-                              if (result != null) {
-                                pessoa = result;
-                              }
-                            })
-                          });
-                    },
-                    child: PeopleCard(
-                      pessoa: snapshot.data![index],
-                      pessoaApiClient: pessoaApiClient,
-                    ),
-                  );
-                },
-              );
-            } else {
-              return const Center(child: CupertinoActivityIndicator());
-            }
-          },
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: FutureBuilder(
+            future: pessoaApiClient.fetchPessoas(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () async {
+                        pessoa = snapshot.data![index];
+                        await Navigator.push<People>(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PeopleDetailPage(
+                                      pessoa: pessoa,
+                                      pessoaApiClient: pessoaApiClient,
+                                    ))).then((result) => {
+                              setState(() {
+                                if (result != null) {
+                                  pessoa = result;
+                                }
+                              })
+                            });
+                      },
+                      child: PeopleCard(
+                        pessoa: snapshot.data![index],
+                        pessoaApiClient: pessoaApiClient,
+                      ),
+                    );
+                  },
+                );
+              } else {
+                return const Center(child: CupertinoActivityIndicator());
+              }
+            },
+          ),
         ),
       );
     } else {
       return Scaffold(
         appBar: AppBar(
-          title: const Text("Cadastro de Pessoas"),
+          title: const Center(child: Text("Cadastro de Pessoas",)),
         ),
-        body: FutureBuilder(
-          future: pessoas,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () async {
-                      pessoa = snapshot.data![index];
-                      await Navigator.push<People>(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PeopleDetailPage(
-                                    pessoa: pessoa,
-                                    pessoaApiClient: pessoaApiClient,
-                                  ))).then((result) => {
-                            setState(() {
-                              if (result != null) {
-                                pessoa = result;
-                              }
-                            })
-                          });
-                    },
-                    child: PeopleCard(
-                      pessoa: snapshot.data![index],
-                      pessoaApiClient: pessoaApiClient,
-                    ),
-                  );
-                },
-              );
-            } else {
-              return const Text("Não tem dados");
-            }
+        body: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: FutureBuilder(
+            future: pessoaApiClient.fetchPessoas(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () async {
+                        pessoa = snapshot.data![index];
+                        await Navigator.push<People>(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PeopleDetailPage(
+                                      pessoa: pessoa,
+                                      pessoaApiClient: pessoaApiClient,
+                                    ))).then((result) => {
+                              setState(() {
+                                if (result != null) {
+                                  pessoa = result;
+                                }
+                              })
+                            });
+                      },
+                      child: PeopleCard(
+                        pessoa: snapshot.data![index],
+                        pessoaApiClient: pessoaApiClient,
+                      ),
+                    );
+                  },
+                );
+              } else {
+                return const Center(child: CircularProgressIndicator(),);
+              }
+            },
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add),
+          onPressed: () {
+            Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => PeopleEditPage(
+                            isCreate: true,
+                            pessoa: People(
+                                id: "", name: "", email: "", details: ""),
+                            pessoaApiClient: pessoaApiClient,
+                          ))).then((result) {
+                setState(() {
+                });
+              });
           },
         ),
       );
