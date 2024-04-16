@@ -17,9 +17,7 @@ class PeopleDetailedCard extends StatelessWidget {
     double fontSize = 16;
     double cardWidth;
 
-    if (Platform.isAndroid) {
-      cardWidth = 0.75;
-    } else if (Platform.isIOS) {
+    if (Platform.isIOS) {
       cardWidth = 0.8;
     } else {
       cardWidth = 0.75;

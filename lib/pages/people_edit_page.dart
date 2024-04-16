@@ -65,7 +65,7 @@ class _PeopleEditPageState extends State<PeopleEditPage> {
               : Text("Editar dados de: \n${widget.pessoa!.name}"),
           trailing: CupertinoButton(
             alignment: Alignment.center,
-            padding: const EdgeInsets.all(1),
+            padding: const EdgeInsets.all(0),
             child: const Text("Salvar"),
             onPressed: () async {
               widget.pessoa!.name = nameController.text;
@@ -192,6 +192,6 @@ class _PeopleEditPageState extends State<PeopleEditPage> {
           },
         ),
       );
-    } 
+    }
   }
 }

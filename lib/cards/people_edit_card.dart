@@ -21,23 +21,6 @@ class PeopleEditCard extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController detailsController;
 
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 200,
-      child: Card(
-        child: Platform.isIOS
-            ? CupertinoFormSection(
-                //mainAxisAlignment: MainAxisAlignment.center,
-                children: form(),
-              )
-            : Column(
-                children: form(),
-              ),
-      ),
-    );
-  }
-
   List<Widget> form() {
     return [
       CustomTextField(
@@ -59,5 +42,25 @@ class PeopleEditCard extends StatelessWidget {
         //formatter: FilteringTextInputFormatter.digitsOnly,
       ),
     ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (Platform.isIOS) {
+      return CupertinoFormSection(
+        header: const Text("Dados da pessoa:"),
+        margin: const EdgeInsets.all(8.0),
+        children: form(),
+      );
+    } else {
+      return Form(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: form(),
+          ),
+        ),
+      );
+    }
   }
 }

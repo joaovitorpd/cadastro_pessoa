@@ -27,6 +27,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    double cardHorizontalPadding = 8.0;
+    double cardVerticalPadding = 1.0;
+
     if (Platform.isIOS) {
       return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
@@ -44,56 +47,62 @@ class _HomePageState extends State<HomePage> {
                                 id: "", name: "", email: "", details: ""),
                             pessoaApiClient: pessoaApiClient,
                           ))).then((result) {
-                setState(() {
-                });
+                setState(() {});
               });
             },
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: FutureBuilder(
-            future: pessoaApiClient.fetchPessoas(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () async {
-                        pessoa = snapshot.data![index];
-                        await Navigator.push<People>(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PeopleDetailPage(
-                                      pessoa: pessoa,
-                                      pessoaApiClient: pessoaApiClient,
-                                    ))).then((result) => {
-                              setState(() {
-                                if (result != null) {
-                                  pessoa = result;
-                                }
-                              })
-                            });
-                      },
+        child: FutureBuilder(
+          future: pessoaApiClient.fetchPessoas(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () async {
+                      pessoa = snapshot.data![index];
+                      await Navigator.push<People>(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PeopleDetailPage(
+                                    pessoa: pessoa,
+                                    pessoaApiClient: pessoaApiClient,
+                                  ))).then((result) => {
+                            setState(() {
+                              if (result != null) {
+                                pessoa = result;
+                              }
+                            })
+                          });
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(
+                          cardHorizontalPadding,
+                          cardVerticalPadding,
+                          cardHorizontalPadding,
+                          cardVerticalPadding),
                       child: PeopleCard(
                         pessoa: snapshot.data![index],
                         pessoaApiClient: pessoaApiClient,
                       ),
-                    );
-                  },
-                );
-              } else {
-                return const Center(child: CupertinoActivityIndicator());
-              }
-            },
-          ),
+                    ),
+                  );
+                },
+              );
+            } else {
+              return const Center(child: CupertinoActivityIndicator());
+            }
+          },
         ),
       );
     } else {
       return Scaffold(
         appBar: AppBar(
-          title: const Center(child: Text("Cadastro de Pessoas",)),
+          title: const Center(
+              child: Text(
+            "Cadastro de Pessoas",
+          )),
         ),
         body: Padding(
           padding: const EdgeInsets.all(5.0),
@@ -121,15 +130,24 @@ class _HomePageState extends State<HomePage> {
                               })
                             });
                       },
-                      child: PeopleCard(
-                        pessoa: snapshot.data![index],
-                        pessoaApiClient: pessoaApiClient,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(
+                            cardHorizontalPadding,
+                            cardVerticalPadding,
+                            cardHorizontalPadding,
+                            cardVerticalPadding),
+                        child: PeopleCard(
+                          pessoa: snapshot.data![index],
+                          pessoaApiClient: pessoaApiClient,
+                        ),
                       ),
                     );
                   },
                 );
               } else {
-                return const Center(child: CircularProgressIndicator(),);
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               }
             },
           ),
@@ -138,17 +156,16 @@ class _HomePageState extends State<HomePage> {
           child: const Icon(Icons.add),
           onPressed: () {
             Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => PeopleEditPage(
-                            isCreate: true,
-                            pessoa: People(
-                                id: "", name: "", email: "", details: ""),
-                            pessoaApiClient: pessoaApiClient,
-                          ))).then((result) {
-                setState(() {
-                });
-              });
+                context,
+                MaterialPageRoute(
+                    builder: (context) => PeopleEditPage(
+                          isCreate: true,
+                          pessoa:
+                              People(id: "", name: "", email: "", details: ""),
+                          pessoaApiClient: pessoaApiClient,
+                        ))).then((result) {
+              setState(() {});
+            });
           },
         ),
       );

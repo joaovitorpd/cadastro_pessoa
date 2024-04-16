@@ -22,6 +22,7 @@ class CustomTextField extends StatelessWidget {
 
     if (Platform.isIOS) {
       return CupertinoTextFormFieldRow(
+        padding: const EdgeInsets.all(5.0),
         prefix: Text(label.toString()),
         controller: controller,
         placeholder: label!,

@@ -38,7 +38,7 @@ class _PeopleDetailPageState extends State<PeopleDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isMacOS) {
+    if (Platform.isIOS) {
       return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
             leading: CupertinoButton(
