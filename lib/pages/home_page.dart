@@ -4,9 +4,11 @@ import 'package:cadastro_pessoa/cards/people_card.dart';
 import 'package:cadastro_pessoa/models/people.dart';
 import 'package:cadastro_pessoa/pages/people_detail_page.dart';
 import 'package:cadastro_pessoa/pages/people_edit_page.dart';
+import 'package:cadastro_pessoa/people_api_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cadastro_pessoa/people_api_client.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,13 +18,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late People pessoa;
-  late Future<List<People>> pessoas;
-  final PeopleApiClient pessoaApiClient = PeopleApiClient();
+  final controller = GetIt.I.get<PeopleApiController>();
 
   @override
   void initState() {
     super.initState();
+    controller.getPeople();
   }
 
   @override
@@ -41,55 +42,46 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => PeopleEditPage(
+                      builder: (context) => const PeopleEditPage(
                             isCreate: true,
-                            pessoa: People(
-                                id: "", name: "", email: "", details: ""),
-                            pessoaApiClient: pessoaApiClient,
-                          ))).then((result) {
-                setState(() {});
-              });
+                          )));
             },
           ),
         ),
         child: FutureBuilder(
-          future: pessoaApiClient.fetchPessoas(),
+          future: controller.peopleFutureList,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () async {
-                      pessoa = snapshot.data![index];
-                      await Navigator.push<People>(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PeopleDetailPage(
-                                    pessoa: pessoa,
-                                    pessoaApiClient: pessoaApiClient,
-                                  ))).then((result) => {
-                            setState(() {
-                              if (result != null) {
-                                pessoa = result;
-                              }
-                            })
-                          });
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(
-                          cardHorizontalPadding,
-                          cardVerticalPadding,
-                          cardHorizontalPadding,
-                          cardVerticalPadding),
-                      child: PeopleCard(
-                        pessoa: snapshot.data![index],
-                        pessoaApiClient: pessoaApiClient,
+              return Observer(builder: (_) {
+                return ListView.builder(
+                  itemCount: controller.peopleList.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        controller.selectedPeople(controller.peopleList[index]);
+                        Navigator.push<People>(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PeopleDetailPage(
+                                      controller: controller,
+                                    )));
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(
+                            cardHorizontalPadding,
+                            cardVerticalPadding,
+                            cardHorizontalPadding,
+                            cardVerticalPadding),
+                        child: Observer(builder: (_) {
+                          return PeopleCard(
+                            pessoa: controller.peopleList[index],
+                          );
+                        }),
                       ),
-                    ),
-                  );
-                },
-              );
+                    );
+                  },
+                );
+              });
             } else {
               return const Center(child: CupertinoActivityIndicator());
             }
@@ -107,43 +99,40 @@ class _HomePageState extends State<HomePage> {
         body: Padding(
           padding: const EdgeInsets.all(5.0),
           child: FutureBuilder(
-            future: pessoaApiClient.fetchPessoas(),
+            future: controller.peopleFutureList,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () async {
-                        pessoa = snapshot.data![index];
-                        await Navigator.push<People>(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PeopleDetailPage(
-                                      pessoa: pessoa,
-                                      pessoaApiClient: pessoaApiClient,
-                                    ))).then((result) => {
-                              setState(() {
-                                if (result != null) {
-                                  pessoa = result;
-                                }
-                              })
-                            });
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(
-                            cardHorizontalPadding,
-                            cardVerticalPadding,
-                            cardHorizontalPadding,
-                            cardVerticalPadding),
-                        child: PeopleCard(
-                          pessoa: snapshot.data![index],
-                          pessoaApiClient: pessoaApiClient,
+                return Observer(builder: (_) {
+                  return ListView.builder(
+                    itemCount: controller.peopleList.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          controller
+                              .selectedPeople(controller.peopleList[index]);
+                          Navigator.push<People>(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PeopleDetailPage(
+                                        controller: controller,
+                                      )));
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(
+                              cardHorizontalPadding,
+                              cardVerticalPadding,
+                              cardHorizontalPadding,
+                              cardVerticalPadding),
+                          child: Observer(builder: (_) {
+                            return PeopleCard(
+                              pessoa: controller.peopleList[index],
+                            );
+                          }),
                         ),
-                      ),
-                    );
-                  },
-                );
+                      );
+                    },
+                  );
+                });
               } else {
                 return const Center(
                   child: CircularProgressIndicator(),
@@ -158,14 +147,9 @@ class _HomePageState extends State<HomePage> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => PeopleEditPage(
+                    builder: (context) => const PeopleEditPage(
                           isCreate: true,
-                          pessoa:
-                              People(id: "", name: "", email: "", details: ""),
-                          pessoaApiClient: pessoaApiClient,
-                        ))).then((result) {
-              setState(() {});
-            });
+                        )));
           },
         ),
       );

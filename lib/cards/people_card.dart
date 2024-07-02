@@ -1,14 +1,13 @@
 import 'package:cadastro_pessoa/models/people.dart';
-import 'package:cadastro_pessoa/people_api_client.dart';
-
 import 'package:flutter/material.dart';
 
 class PeopleCard extends StatelessWidget {
-  const PeopleCard(
-      {super.key, required this.pessoa, required this.pessoaApiClient});
+  const PeopleCard({
+    super.key,
+    required this.pessoa,
+  });
 
   final People pessoa;
-  final PeopleApiClient pessoaApiClient;
 
   @override
   Widget build(BuildContext context) {

@@ -2,51 +2,119 @@ import 'dart:io';
 
 import 'package:cadastro_pessoa/cards/people_edit_card.dart';
 import 'package:cadastro_pessoa/models/people.dart';
-import 'package:cadastro_pessoa/people_api_client.dart';
+import 'package:cadastro_pessoa/people_api_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 class PeopleEditPage extends StatefulWidget {
-  const PeopleEditPage({
-    super.key,
-    required this.isCreate,
-    this.pessoa,
-    required this.pessoaApiClient,
-  });
+  const PeopleEditPage({super.key, required this.isCreate});
 
   final bool isCreate;
-  final People? pessoa;
-  final PeopleApiClient pessoaApiClient;
 
   @override
   State<PeopleEditPage> createState() => _PeopleEditPageState();
 }
 
 class _PeopleEditPageState extends State<PeopleEditPage> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController detailsController = TextEditingController();
+  iOsOnPressed(PeopleApiController controller, BuildContext context,
+      People people, bool isCreate) async {
+    if (isCreate) {
+      try {
+        await controller.createPeople(
+          people,
+        );
+        if (context.mounted) {
+          Navigator.pop(context);
+        }
+      } on Exception catch (e) {
+        if (context.mounted) {
+          showCupertinoModalPopup<void>(
+            context: context,
+            builder: (BuildContext context) => CupertinoAlertDialog(
+              title: const Text("Erro!"),
+              content: Text(e.toString()),
+              actions: <CupertinoDialogAction>[
+                CupertinoDialogAction(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("OK"),
+                ),
+              ],
+            ),
+          );
+        }
+      }
+    } else {
+      try {
+        await controller.updatePeople(
+          people,
+        );
+        // controller.selectedPeople(people);
+        if (context.mounted) {
+          Navigator.pop(context);
+        }
+      } on Exception catch (e) {
+        if (context.mounted) {
+          showCupertinoModalPopup<void>(
+            context: context,
+            builder: (BuildContext context) => CupertinoAlertDialog(
+              title: const Text("Erro!"),
+              content: Text(e.toString()),
+              actions: <CupertinoDialogAction>[
+                CupertinoDialogAction(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("OK"),
+                ),
+              ],
+            ),
+          );
+        }
+      }
+    }
+  }
 
-  @override
-  void initState() {
-    super.initState();
-    if (widget.isCreate) {
-      nameController.text = "";
-      emailController.text = widget.isCreate ? "" : widget.pessoa!.email!;
-      detailsController.text = widget.isCreate ? "" : widget.pessoa!.name!;
+  androidOnPressed(PeopleApiController controller, BuildContext context,
+      People people, bool isCreate) async {
+    if (isCreate) {
+      try {
+        await controller.createPeople(
+          people,
+        );
+        if (context.mounted) Navigator.pop(context, people);
+      } on Exception catch (e) {
+        var snackbar = SnackBar(content: Text(e.toString()));
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(snackbar);
+        }
+      }
+    } else {
+      try {
+        await controller.updatePeople(
+          people,
+        );
+        if (context.mounted) Navigator.pop(context, people);
+      } on Exception catch (e) {
+        var snackbar = SnackBar(content: Text(e.toString()));
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(snackbar);
+        }
+      }
     }
   }
 
   @override
-  void dispose() {
-    nameController.dispose();
-    emailController.dispose();
-    detailsController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final controller = GetIt.I.get<PeopleApiController>();
+
+    People pessoa = People.empty();
+    if (!widget.isCreate) {
+      pessoa = controller.people;
+    }
+
     if (Platform.isIOS) {
       return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
@@ -62,80 +130,18 @@ class _PeopleEditPageState extends State<PeopleEditPage> {
           ),
           middle: widget.isCreate
               ? const Text("Cadastro:")
-              : Text("Editar dados de: \n${widget.pessoa!.name}"),
+              : Text("Editar dados de: \n${controller.people.name}"),
           trailing: CupertinoButton(
             alignment: Alignment.center,
             padding: const EdgeInsets.all(0),
             child: const Text("Salvar"),
             onPressed: () async {
-              widget.pessoa!.name = nameController.text;
-              widget.pessoa!.email = emailController.text;
-              widget.pessoa!.details = detailsController.text;
-              if (widget.isCreate) {
-                try {
-                  await widget.pessoaApiClient.createPessoa(
-                    pessoa: widget.pessoa!,
-                  );
-                  if (context.mounted) {
-                    Navigator.pop(context, widget.pessoa);
-                  }
-                } on Exception catch (e) {
-                  if (context.mounted) {
-                    showCupertinoModalPopup<void>(
-                      context: context,
-                      builder: (BuildContext context) => CupertinoAlertDialog(
-                        title: const Text("Erro!"),
-                        content: Text(e.toString()),
-                        actions: <CupertinoDialogAction>[
-                          CupertinoDialogAction(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text("OK"),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                }
-              } else {
-                try {
-                  await widget.pessoaApiClient.updatePessoa(
-                    pessoa: widget.pessoa!,
-                  );
-                  if (context.mounted) {
-                    Navigator.pop(context, widget.pessoa);
-                  }
-                } on Exception catch (e) {
-                  if (context.mounted) {
-                    showCupertinoModalPopup<void>(
-                      context: context,
-                      builder: (BuildContext context) => CupertinoAlertDialog(
-                        title: const Text("Erro!"),
-                        content: Text(e.toString()),
-                        actions: <CupertinoDialogAction>[
-                          CupertinoDialogAction(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text("OK"),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                }
-              }
+              iOsOnPressed(controller, context, pessoa, widget.isCreate);
             },
           ),
         ),
-        child: SafeArea(
-          child: PeopleEditCard(
-              pessoa: widget.pessoa!,
-              pessoaApiClient: widget.pessoaApiClient,
-              nameController: nameController,
-              emailController: emailController,
-              detailsController: detailsController),
+        child: const SafeArea(
+          child: PeopleEditCard(),
         ),
       );
     } else {
@@ -143,7 +149,7 @@ class _PeopleEditPageState extends State<PeopleEditPage> {
         appBar: AppBar(
           title: widget.isCreate
               ? const Text("Cadastro:")
-              : Text("Editar dados de: \n${widget.pessoa!.name}"),
+              : Text("Editar dados de: \n${controller.people.name}"),
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -151,44 +157,11 @@ class _PeopleEditPageState extends State<PeopleEditPage> {
             icon: const Icon(Icons.arrow_back),
           ),
         ),
-        body: PeopleEditCard(
-            pessoa: widget.pessoa!,
-            pessoaApiClient: widget.pessoaApiClient,
-            nameController: nameController,
-            emailController: emailController,
-            detailsController: detailsController),
+        body: const PeopleEditCard(),
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.save),
           onPressed: () async {
-            widget.pessoa!.name = nameController.text;
-            widget.pessoa!.email = emailController.text;
-            widget.pessoa!.details = detailsController.text;
-
-            if (widget.isCreate) {
-              try {
-                await widget.pessoaApiClient.createPessoa(
-                  pessoa: widget.pessoa!,
-                );
-                if (context.mounted) Navigator.pop(context, widget.pessoa);
-              } on Exception catch (e) {
-                var snackbar = SnackBar(content: Text(e.toString()));
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(snackbar);
-                }
-              }
-            } else {
-              try {
-                await widget.pessoaApiClient.updatePessoa(
-                  pessoa: widget.pessoa!,
-                );
-                if (context.mounted) Navigator.pop(context, widget.pessoa);
-              } on Exception catch (e) {
-                var snackbar = SnackBar(content: Text(e.toString()));
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(snackbar);
-                }
-              }
-            }
+            androidOnPressed(controller, context, pessoa, widget.isCreate);
           },
         ),
       );

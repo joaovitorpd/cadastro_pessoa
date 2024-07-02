@@ -1,18 +1,19 @@
 import 'dart:io';
-
-import 'package:cadastro_pessoa/models/people.dart';
-import 'package:cadastro_pessoa/people_api_client.dart';
+import 'package:cadastro_pessoa/people_api_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
 
 class PeopleDetailedCard extends StatelessWidget {
-  const PeopleDetailedCard(
-      {super.key, required this.pessoa, required this.pessoaApiClient});
-
-  final People pessoa;
-  final PeopleApiClient pessoaApiClient;
+  const PeopleDetailedCard({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final controller = GetIt.I.get<PeopleApiController>();
+    // People pessoa = controller.pessoa;
+
     double lineHight = 10;
     double fontSize = 16;
     double cardWidth;
@@ -24,13 +25,6 @@ class PeopleDetailedCard extends StatelessWidget {
     }
 
     return GestureDetector(
-      /* onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => PeopleDetailPage(
-                    id: id, name: name, email: email, details: details)));
-      }, */
       child: Column(
         children: [
           const SizedBox(
@@ -55,42 +49,50 @@ class PeopleDetailedCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        pessoa.name != null
-                            ? Text(
-                                "Id: ${pessoa.id}",
-                                style: TextStyle(fontSize: fontSize),
-                                textAlign: TextAlign.start,
-                              )
+                        controller.people.name != null
+                            ? Observer(builder: (_) {
+                                return Text(
+                                  "Id: ${controller.people.id}",
+                                  style: TextStyle(fontSize: fontSize),
+                                  textAlign: TextAlign.start,
+                                );
+                              })
                             : const Text("Sem id registrado"),
                         SizedBox(
                           height: lineHight,
                         ),
-                        pessoa.name != null
-                            ? Text(
-                                "Nome: ${pessoa.name}",
-                                style: TextStyle(fontSize: fontSize),
-                                textAlign: TextAlign.start,
-                              )
+                        controller.people.name != null
+                            ? Observer(builder: (_) {
+                                return Text(
+                                  "Nome: ${controller.people.name}",
+                                  style: TextStyle(fontSize: fontSize),
+                                  textAlign: TextAlign.start,
+                                );
+                              })
                             : const Text("Sem nome registrado"),
                         SizedBox(
                           height: lineHight,
                         ),
-                        pessoa.email != null
-                            ? Text(
-                                "Email: ${pessoa.email}",
-                                style: TextStyle(fontSize: fontSize),
-                                textAlign: TextAlign.start,
-                              )
+                        controller.people.email != null
+                            ? Observer(builder: (_) {
+                                return Text(
+                                  "Email: ${controller.people.email}",
+                                  style: TextStyle(fontSize: fontSize),
+                                  textAlign: TextAlign.start,
+                                );
+                              })
                             : const Text("Sem email registrado"),
                         SizedBox(
                           height: lineHight,
                         ),
-                        pessoa.details != null
-                            ? Text(
-                                "Descrição: ${pessoa.details}",
-                                style: TextStyle(fontSize: fontSize),
-                                textAlign: TextAlign.start,
-                              )
+                        controller.people.details != null
+                            ? Observer(builder: (_) {
+                                return Text(
+                                  "Descrição: ${controller.people.details}",
+                                  style: TextStyle(fontSize: fontSize),
+                                  textAlign: TextAlign.start,
+                                );
+                              })
                             : const Text("Sem detalhe registrado"),
                       ],
                     ),

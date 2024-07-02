@@ -1,44 +1,35 @@
 import 'dart:io';
 
 import 'package:cadastro_pessoa/models/people.dart';
-import 'package:cadastro_pessoa/people_api_client.dart';
+import 'package:cadastro_pessoa/people_api_controller.dart';
 import 'package:cadastro_pessoa/widgets/custom_text_field.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
 
 class PeopleEditCard extends StatelessWidget {
-  const PeopleEditCard(
-      {super.key,
-      required this.pessoa,
-      required this.pessoaApiClient,
-      required this.nameController,
-      required this.emailController,
-      required this.detailsController});
+  const PeopleEditCard({
+    super.key,
+  });
 
-  final People pessoa;
-  final PeopleApiClient pessoaApiClient;
-  final TextEditingController nameController;
-  final TextEditingController emailController;
-  final TextEditingController detailsController;
-
-  List<Widget> form() {
+  List<Widget> form(PeopleApiController controller) {
     return [
       CustomTextField(
+        initialValue: controller.people.name,
         label: "Nome:",
-        controller: nameController,
-        value: pessoa.name,
+        onChanged: controller.people.setName,
         //formatter: FilteringTextInputFormatter.digitsOnly,
       ),
       CustomTextField(
+        initialValue: controller.people.email,
         label: "E-mail:",
-        controller: emailController,
-        value: pessoa.email,
+        onChanged: controller.people.setEmail,
         //formatter: FilteringTextInputFormatter.digitsOnly,
       ),
       CustomTextField(
+        initialValue: controller.people.details,
         label: "Detalhes:",
-        controller: detailsController,
-        value: pessoa.details,
+        onChanged: controller.people.setDetails,
         //formatter: FilteringTextInputFormatter.digitsOnly,
       ),
     ];
@@ -46,18 +37,20 @@ class PeopleEditCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = GetIt.I.get<PeopleApiController>();
+
     if (Platform.isIOS) {
       return CupertinoFormSection(
         header: const Text("Dados da pessoa:"),
         margin: const EdgeInsets.all(8.0),
-        children: form(),
+        children: form(controller),
       );
     } else {
       return Form(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
-            children: form(),
+            children: form(controller),
           ),
         ),
       );

@@ -1,25 +1,27 @@
+import 'package:cadastro_pessoa/people_api_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:pull_down_button/pull_down_button.dart';
 import 'package:cadastro_pessoa/models/people.dart';
 import 'package:cadastro_pessoa/pages/people_edit_page.dart';
-import 'package:cadastro_pessoa/people_api_client.dart';
 
 class MenuApple extends StatelessWidget {
-  const MenuApple(
-      {super.key,
-      required this.builder,
-      required this.pessoa,
-      required this.pessoaApiClient,
-      required this.callback});
+  const MenuApple({
+    super.key,
+    required this.builder,
+    required this.controller,
+  });
 
   final PullDownMenuButtonBuilder builder;
-  final People pessoa;
-  final PeopleApiClient pessoaApiClient;
-  final void Function(People people) callback;
+
+  final PeopleApiController controller;
 
   @override
   Widget build(BuildContext context) {
+    // final controller = GetIt.I.get<PeopleApiController>();
+    People pessoa = controller.people;
+
     return PullDownButton(
       itemBuilder: (context) => [
         PullDownMenuItem(
@@ -27,15 +29,9 @@ class MenuApple extends StatelessWidget {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => PeopleEditPage(
+                    builder: (context) => const PeopleEditPage(
                           isCreate: false,
-                          pessoa: pessoa,
-                          pessoaApiClient: pessoaApiClient,
-                        ))).then((result) {
-              if (result != null) {
-                callback(result);
-              }
-            });
+                        )));
           },
           title: "Editar",
           icon: CupertinoIcons.pencil,
@@ -67,8 +63,7 @@ class MenuApple extends StatelessWidget {
                             ),
                             onPressed: () async {
                               try {
-                                await pessoaApiClient.deletePessoa(
-                                    pessoa: pessoa);
+                                await controller.deletePeople(pessoa);
                                 if (context.mounted) {
                                   Navigator.pop(context);
                                   Navigator.pop(context);

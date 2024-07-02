@@ -1,43 +1,29 @@
 import 'package:cadastro_pessoa/cards/people_detailed_card.dart';
 import 'package:cadastro_pessoa/models/people.dart';
 import 'package:cadastro_pessoa/pages/people_edit_page.dart';
-import 'package:cadastro_pessoa/people_api_client.dart';
+import 'package:cadastro_pessoa/people_api_controller.dart';
 import 'package:cadastro_pessoa/widgets/menu_apple.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'dart:io' show Platform;
 
-class PeopleDetailPage extends StatefulWidget {
+import 'package:get_it/get_it.dart';
+
+class PeopleDetailPage extends StatelessWidget {
   const PeopleDetailPage({
     super.key,
-    required this.pessoa,
-    required this.pessoaApiClient,
+    required this.controller,
   });
 
-  final People pessoa;
-  final PeopleApiClient pessoaApiClient;
-
-  @override
-  State<PeopleDetailPage> createState() => _PeopleDetailPageState();
-}
-
-class _PeopleDetailPageState extends State<PeopleDetailPage> {
-  late People _editedPessoa;
-
-  @override
-  void initState() {
-    super.initState();
-    _editedPessoa = widget.pessoa;
-  }
-
-  void _updatedPessoa(People newPessoa) {
-    setState(() {
-      _editedPessoa = newPessoa;
-    });
-  }
+  final PeopleApiController controller;
 
   @override
   Widget build(BuildContext context) {
+    final controller = GetIt.I.get<PeopleApiController>();
+
+    // People pessoa = controller.people;
+
     if (Platform.isIOS) {
       return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
@@ -48,63 +34,56 @@ class _PeopleDetailPageState extends State<PeopleDetailPage> {
                 color: Colors.black,
               ),
               onPressed: () {
-                Navigator.pop(context, widget.pessoa);
+                Navigator.pop(context);
               },
             ),
-            middle: Text("Detalhes de ${widget.pessoa.name}"),
+            middle: Observer(builder: (_) {
+              return Text("Detalhes de ${controller.people.name}");
+            }),
             trailing: MenuApple(
-                builder: (_, showMenu) => CupertinoButton(
-                      onPressed: showMenu,
-                      padding: EdgeInsets.zero,
-                      pressedOpacity: 1,
-                      child: const Icon(CupertinoIcons.ellipsis_circle),
-                    ),
-                pessoa: widget.pessoa,
-                pessoaApiClient: widget.pessoaApiClient,
-                callback: (pessoa) {
-                  _updatedPessoa(pessoa);
-                })),
+              builder: (_, showMenu) => CupertinoButton(
+                onPressed: showMenu,
+                padding: EdgeInsets.zero,
+                pressedOpacity: 1,
+                child: const Icon(CupertinoIcons.ellipsis_circle),
+              ),
+              controller: controller,
+            )),
         child: SafeArea(
-          child: PeopleDetailedCard(
-            pessoa: widget.pessoa,
-            pessoaApiClient: widget.pessoaApiClient,
-          ),
+          child: Observer(builder: (_) {
+            return const PeopleDetailedCard();
+          }),
         ),
       );
     } else {
       return Scaffold(
         appBar: AppBar(
-          title: Text("Detalhes de ${widget.pessoa.name}"),
+          title: Observer(builder: (_) {
+            return Text("Detalhes de ${controller.people.name}");
+          }),
           leading: IconButton(
             onPressed: () {
-              Navigator.pop(context, widget.pessoa);
+              Navigator.pop(context);
             },
             icon: const Icon(Icons.arrow_back),
           ),
           actions: [
             TextButton(
-              onPressed: () async {
+              onPressed: () {
                 Navigator.push<People>(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => PeopleEditPage(
+                        builder: (context) => const PeopleEditPage(
                               isCreate: false,
-                              pessoa: _editedPessoa,
-                              pessoaApiClient: widget.pessoaApiClient,
-                            ))).then((result) {
-                  if (result != null) {
-                    _updatedPessoa(result);
-                  }
-                });
+                            )));
               },
               child: const Text("Editar"),
             ),
           ],
         ),
-        body: PeopleDetailedCard(
-          pessoa: _editedPessoa,
-          pessoaApiClient: widget.pessoaApiClient,
-        ),
+        body: Observer(builder: (_) {
+          return const PeopleDetailedCard();
+        }),
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.delete),
           onPressed: () => showDialog<void>(
@@ -120,40 +99,39 @@ class _PeopleDetailPageState extends State<PeopleDetailPage> {
                   child: const Text("Não"),
                 ),
                 TextButton(
-                  onPressed: () async{
+                  onPressed: () async {
                     try {
-                      await widget.pessoaApiClient.deletePessoa(
-                        pessoa: widget.pessoa);
-                        if(context.mounted) {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        }
+                      await controller.deletePeople(controller.people);
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      }
                     } on Exception catch (e) {
-                      if(context.mounted) {
+                      if (context.mounted) {
                         showDialog(
-                          context: context, 
+                          context: context,
                           builder: (BuildContext context) => AlertDialog(
-                            title: const Text ("Erro!"),
+                            title: const Text("Erro!"),
                             content: Text(e.toString()),
                             actions: [
                               TextButton(
                                 onPressed: () {
                                   Navigator.pop(context);
                                   Navigator.pop(context);
-                                }, 
+                                },
                                 child: const Text("OK"),
-                                ),
+                              ),
                             ],
                           ),
-                          );
+                        );
                       }
                     }
                   },
-                  child: const Text("Sim", 
-                  style: TextStyle(
-                    color: Colors.red, 
-                    fontWeight: FontWeight.bold
-                    ),),
+                  child: const Text(
+                    "Sim",
+                    style: TextStyle(
+                        color: Colors.red, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ],
             ),

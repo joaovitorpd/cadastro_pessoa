@@ -16,12 +16,17 @@ dependencies:
   brasil_fields: ^1.14.3
   cupertino_icons: ^1.0.6
   pull_down_button: ^0.9.3
+  mobx: ^2.3.3+2
+  flutter_mobx: ^2.2.1+1
+  get_it: ^7.7.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^3.0.0
+  mobx_codegen: ^2.6.1
+  build_runner: ^2.4.9
   
 
 flutter:

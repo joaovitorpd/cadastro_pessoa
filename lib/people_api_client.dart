@@ -11,10 +11,10 @@ class PeopleApiClient {
     if (response.statusCode == 200) {
       var jsonBody = jsonDecode(response.body);
 
-      var listaPessoa =
+      var listaPessoas =
           List<People>.from(jsonBody.map((pessoa) => People.fromJson(pessoa)));
 
-      return listaPessoa;
+      return listaPessoas;
     } else {
       throw Exception('Falha ao carregar Pessoa');
     }
