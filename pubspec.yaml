@@ -16,6 +16,9 @@ dependencies:
   brasil_fields: ^1.14.3
   cupertino_icons: ^1.0.6
   pull_down_button: ^0.9.3
+  flutter_bloc: ^8.1.6
+  equatable: ^2.0.5
+  
 
 dev_dependencies:
   flutter_test:

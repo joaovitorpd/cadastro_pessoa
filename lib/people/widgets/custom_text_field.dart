@@ -7,38 +7,30 @@ class CustomTextField extends StatelessWidget {
   const CustomTextField(
       {super.key,
       required this.label,
-      required this.controller,
-      //required this.formatter,
-      required this.value});
+      required this.initialValue,
+      required this.onChanged});
 
-  final String? value;
+  final String? initialValue;
   final String? label;
-  final TextEditingController controller;
-  //final TextInputFormatter formatter;
+  final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
-    controller.text = value!;
-
     if (Platform.isIOS) {
       return CupertinoTextFormFieldRow(
         padding: const EdgeInsets.all(5.0),
         prefix: Text(label.toString()),
-        controller: controller,
+        initialValue: initialValue,
+        onChanged: onChanged,
         placeholder: label!,
-        /* inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly,
-        ], */
       );
     } else {
       return TextFormField(
-        controller: controller,
+        initialValue: initialValue,
+        onChanged: onChanged,
         decoration: InputDecoration(
           labelText: label,
         ),
-        /* inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly,
-        ], */
       );
     }
   }

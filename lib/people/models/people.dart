@@ -10,6 +10,17 @@ class People {
       required this.email,
       required this.details});
 
+  People.empty();
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'email': email,
+      'details': details,
+    };
+  }
+
   factory People.fromJson(Map<String, dynamic> json) {
     return switch (json) {
       {
