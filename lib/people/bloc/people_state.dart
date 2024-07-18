@@ -13,8 +13,8 @@ class LoadingState extends PeopleState {
   List<Object?> get props => [];
 }
 
-class LoadedState extends PeopleState {
-  LoadedState(this.peopleList);
+class PeopleListState extends PeopleState {
+  PeopleListState(this.peopleList);
 
   final List<People> peopleList;
 
@@ -40,7 +40,20 @@ class PeopleEditState extends PeopleState {
   List<Object?> get props => [people];
 }
 
-class ErrorState extends PeopleState {
+class PeopleCreateState extends PeopleState {
+  PeopleCreateState(this.people);
+
+  final People people;
+
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [people];
+}
+
+class ErrorState extends PeopleState {
+  ErrorState({required this.error});
+
+  final String error;
+
+  @override
+  List<Object?> get props => [error];
 }

@@ -22,7 +22,7 @@ class PeopleRepository {
 
   Future<People> createPeople({required People pessoa}) async {
     final response = await http.post(
-      Uri.parse(apiUrl),
+      Uri.parse('$apiUrl/'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

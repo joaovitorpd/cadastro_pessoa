@@ -1,22 +1,21 @@
 import 'dart:io';
-import 'package:cadastro_pessoa/people/bloc/people_cubit.dart';
-import 'package:cadastro_pessoa/people/bloc/people_state.dart';
 import 'package:cadastro_pessoa/people/models/people.dart';
 import 'package:cadastro_pessoa/people/widgets/custom_text_field.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PeopleEditCard extends StatelessWidget {
-  PeopleEditCard({
+  const PeopleEditCard({
     super.key,
+    required this.people,
     required this.nameOnChanged,
     required this.emailOnChanged,
     required this.detailsOnChanged,
   });
 
-  void Function(String)? nameOnChanged;
-  void Function(String)? emailOnChanged;
-  void Function(String)? detailsOnChanged;
+  final People people;
+  final void Function(String)? nameOnChanged;
+  final void Function(String)? emailOnChanged;
+  final void Function(String)? detailsOnChanged;
 
   List<Widget> form(People person) {
     return [
@@ -43,34 +42,21 @@ class PeopleEditCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PeopleCubit, PeopleState>(builder: (context, state) {
-      switch (state) {
-        case LoadingState():
-          return const Center(
-            child: Text('Carregando pessoa'),
-          );
-        case PeopleEditState():
-          if (Platform.isIOS) {
-            return CupertinoFormSection(
-              header: const Text("Dados da pessoa:"),
-              margin: const EdgeInsets.all(8.0),
-              children: form(state.people),
-            );
-          } else {
-            return Form(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: form(state.people),
-                ),
-              ),
-            );
-          }
-        default:
-          return const Center(
-            child: Text('Ocorreu um erro'),
-          );
-      }
-    });
+    if (Platform.isIOS) {
+      return CupertinoFormSection(
+        header: const Text("Dados da pessoa:"),
+        margin: const EdgeInsets.all(8.0),
+        children: form(people),
+      );
+    } else {
+      return Form(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: form(people),
+          ),
+        ),
+      );
+    }
   }
 }

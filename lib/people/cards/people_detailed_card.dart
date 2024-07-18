@@ -24,13 +24,6 @@ class PeopleDetailedCard extends StatelessWidget {
     }
 
     return GestureDetector(
-      /* onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => PeopleDetailPage(
-                    id: id, name: name, email: email, details: details)));
-      }, */
       child: Column(
         children: [
           const SizedBox(

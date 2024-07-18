@@ -24,10 +24,10 @@ class People {
   factory People.fromJson(Map<String, dynamic> json) {
     return switch (json) {
       {
-        'id': String id,
-        'name': String name,
-        'email': String email,
-        'details': String details,
+        'id': String? id,
+        'name': String? name,
+        'email': String? email,
+        'details': String? details,
       } =>
         People(
           id: id,
@@ -35,7 +35,7 @@ class People {
           email: email,
           details: details,
         ),
-      _ => throw const FormatException('Falha ao carregar pessoa')
+      _ => throw const FormatException('Falha ao desserializar Pessoa')
     };
   }
 }

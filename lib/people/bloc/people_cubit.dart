@@ -20,55 +20,52 @@ class PeopleCubit extends Cubit<PeopleState> {
     emit(PeopleEditState(people));
   }
 
-  void loadPeopleList() {
-    emit(LoadedState(peopleList));
+  void selectCreatePeople() {
+    People people = People.empty();
+    emit(PeopleCreateState(people));
   }
 
-  void getPeopleList() async {
-    try {
-      emit(LoadingState());
-      peopleList = await peopleRepository.fetchPeople();
-      emit(LoadedState(peopleList));
-    } catch (e) {
-      emit(ErrorState());
-    }
+  void loadPeopleList() {
+    emit(PeopleListState(peopleList));
+  }
+
+  void getPeopleList() {
+    emit(LoadingState());
+    peopleRepository.fetchPeople().then((x) {
+      peopleList = x;
+      emit(PeopleListState(peopleList));
+    }).catchError((e) {
+      emit(ErrorState(error: e.toString()));
+    });
   }
 
   void createPeople(People people) {
-    try {
-      emit(LoadingState());
-      var newPeople = peopleRepository.createPeople(pessoa: people);
-      newPeople.then((x) {
-        peopleList.add(x);
-        emit(LoadedState(peopleList));
-      });
-    } catch (e) {
-      emit(ErrorState());
-    }
+    var newPeople = peopleRepository.createPeople(pessoa: people);
+    newPeople.then((x) {
+      peopleList.add(x);
+      emit(PeopleDetailState(x));
+    }).catchError((e) {
+      emit(ErrorState(error: e.toString()));
+    });
   }
 
   void updatePeople(People people) {
-    try {
-      emit(LoadingState());
-      var updatedPeople = peopleRepository.updatePeople(pessoa: people);
-      updatedPeople.then((x) {
-        peopleList[peopleList.indexWhere((x) => x.id == people.id)] = people;
-        // emit(LoadedState(peopleList));
-        emit(PeopleDetailState(people));
-      });
-    } catch (e) {
-      emit(ErrorState());
-    }
+    var updatedPeople = peopleRepository.updatePeople(pessoa: people);
+    updatedPeople.then((x) {
+      peopleList[peopleList.indexWhere((x) => x.id == people.id)] = x;
+      emit(PeopleDetailState(x));
+    }).catchError((e) {
+      emit(ErrorState(error: e.toString()));
+    });
   }
 
-  void deletePeople(People people) async {
-    try {
-      emit(LoadingState());
-      peopleRepository.deletePeople(pessoa: people);
+  void deletePeople(People people) {
+    var deletPeople = peopleRepository.deletePeople(pessoa: people);
+    deletPeople.then((x) {
       peopleList.removeWhere((x) => x.id == people.id);
-      emit(LoadedState(peopleList));
-    } catch (e) {
-      emit(ErrorState());
-    }
+      emit(PeopleListState(peopleList));
+    }).catchError((e) {
+      emit(ErrorState(error: e.toString()));
+    });
   }
 }

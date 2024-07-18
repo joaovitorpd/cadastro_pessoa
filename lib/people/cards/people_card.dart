@@ -21,7 +21,7 @@ class PeopleCard extends StatelessWidget {
             return const Center(
               child: CircularProgressIndicator(),
             );
-          case LoadedState():
+          case PeopleListState():
             return Card(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,

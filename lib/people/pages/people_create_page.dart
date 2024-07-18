@@ -6,21 +6,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class PeopleEditPage extends StatelessWidget {
-  PeopleEditPage({
-    super.key,
-    required this.people,
-  });
+class PeopleCreatePage extends StatelessWidget {
+  const PeopleCreatePage({super.key, required this.people});
 
   final People people;
-  final People editedPeople = People.empty();
 
   @override
   Widget build(BuildContext context) {
-    editedPeople.name = people.name;
-    editedPeople.email = people.email;
-    editedPeople.details = people.details;
-
     if (Platform.isIOS) {
       return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
@@ -34,7 +26,7 @@ class PeopleEditPage extends StatelessWidget {
               _backButtonPressed(context);
             },
           ),
-          middle: Text("Editar dados de: \n${people.name}"),
+          middle: const Text("Cadastro:"),
           trailing: CupertinoButton(
             alignment: Alignment.center,
             padding: const EdgeInsets.all(0),
@@ -51,7 +43,7 @@ class PeopleEditPage extends StatelessWidget {
     } else {
       return Scaffold(
         appBar: AppBar(
-          title: Text("Editar dados de: \n${people.name}"),
+          title: const Text("Cadastro:"),
           leading: IconButton(
             onPressed: () {
               _backButtonPressed(context);
@@ -72,19 +64,25 @@ class PeopleEditPage extends StatelessWidget {
 
   Widget _peopleEditCard() {
     return PeopleEditCard(
-      nameOnChanged: (value) => editedPeople.name = value,
-      emailOnChanged: (value) => editedPeople.email = value,
-      detailsOnChanged: (value) => editedPeople.details = value,
+      nameOnChanged: (value) => people.name = value,
+      emailOnChanged: (value) => people.email = value,
+      detailsOnChanged: (value) => people.details = value,
       people: people,
     );
   }
 
-  void _backButtonPressed(BuildContext context) {
-    context.read<PeopleCubit>().selectPersonToDetail(people);
+  void _backButtonPressed(
+    BuildContext context,
+  ) {
+    context.read<PeopleCubit>().loadPeopleList();
   }
 
   void _saveButtonOnPressed(BuildContext context) {
-    editedPeople.id = people.id;
-    context.read<PeopleCubit>().updatePeople(editedPeople);
+    var newPerson = People(
+        id: null,
+        name: people.name,
+        email: people.email,
+        details: people.details);
+    context.read<PeopleCubit>().createPeople(newPerson);
   }
 }
