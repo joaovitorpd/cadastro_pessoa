@@ -21,7 +21,7 @@ class MenuApple extends StatelessWidget {
       itemBuilder: (context) => [
         PullDownMenuItem(
           onTap: () {
-            context.read<PeopleCubit>().selectPersonToEdit(people);
+            context.read<PeopleCubit>().selectEditPeople(people);
           },
           title: "Editar",
           icon: CupertinoIcons.pencil,

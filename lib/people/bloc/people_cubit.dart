@@ -12,11 +12,11 @@ class PeopleCubit extends Cubit<PeopleState> {
   final peopleRepository = PeopleRepository();
   late List<People> peopleList;
 
-  void selectPersonToDetail(People people) {
+  void selectDetailsPeople(People people) {
     emit(PeopleDetailState(people));
   }
 
-  void selectPersonToEdit(People people) {
+  void selectEditPeople(People people) {
     emit(PeopleEditState(people));
   }
 

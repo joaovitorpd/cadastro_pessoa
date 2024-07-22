@@ -80,7 +80,7 @@ class PeopleEditPage extends StatelessWidget {
   }
 
   void _backButtonPressed(BuildContext context) {
-    context.read<PeopleCubit>().selectPersonToDetail(people);
+    context.read<PeopleCubit>().selectDetailsPeople(people);
   }
 
   void _saveButtonOnPressed(BuildContext context) {

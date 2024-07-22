@@ -60,7 +60,7 @@ class PeopleListPage extends StatelessWidget {
               return GestureDetector(
                 onTap: () {
                   final People people = state.peopleList[index];
-                  context.read<PeopleCubit>().selectPersonToDetail(people);
+                  context.read<PeopleCubit>().selectDetailsPeople(people);
                 },
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(
