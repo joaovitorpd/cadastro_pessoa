@@ -7,9 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PeopleCreatePage extends StatelessWidget {
-  const PeopleCreatePage({super.key, required this.people});
+  const PeopleCreatePage({super.key, required this.people, this.errors});
 
   final People people;
+  final Map<String, String>? errors;
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +69,7 @@ class PeopleCreatePage extends StatelessWidget {
       emailOnChanged: (value) => people.email = value,
       detailsOnChanged: (value) => people.details = value,
       people: people,
+      errors: errors,
     );
   }
 

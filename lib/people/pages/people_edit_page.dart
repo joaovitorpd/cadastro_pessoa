@@ -10,10 +10,12 @@ class PeopleEditPage extends StatelessWidget {
   PeopleEditPage({
     super.key,
     required this.people,
+    this.errors,
   });
 
   final People people;
   final People editedPeople = People.empty();
+  final Map<String, String>? errors;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class PeopleEditPage extends StatelessWidget {
               _backButtonPressed(context);
             },
           ),
-          middle: Text("Editar dados de: \n${people.name}"),
+          middle: _titleText(),
           trailing: CupertinoButton(
             alignment: Alignment.center,
             padding: const EdgeInsets.all(0),
@@ -51,7 +53,7 @@ class PeopleEditPage extends StatelessWidget {
     } else {
       return Scaffold(
         appBar: AppBar(
-          title: Text("Editar dados de: \n${people.name}"),
+          title: _titleText(),
           leading: IconButton(
             onPressed: () {
               _backButtonPressed(context);
@@ -75,8 +77,13 @@ class PeopleEditPage extends StatelessWidget {
       nameOnChanged: (value) => editedPeople.name = value,
       emailOnChanged: (value) => editedPeople.email = value,
       detailsOnChanged: (value) => editedPeople.details = value,
-      people: people,
+      people: editedPeople,
+      errors: errors,
     );
+  }
+
+  Widget? _titleText() {
+    return Text("Editar dados de: \n${people.name}");
   }
 
   void _backButtonPressed(BuildContext context) {

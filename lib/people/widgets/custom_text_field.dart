@@ -7,21 +7,35 @@ class CustomTextField extends StatelessWidget {
       {super.key,
       required this.label,
       required this.initialValue,
-      required this.onChanged});
+      required this.onChanged,
+      required this.errorText});
 
   final String? initialValue;
   final String? label;
+  final String? errorText;
   final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
     if (Platform.isIOS) {
-      return CupertinoTextFormFieldRow(
-        padding: const EdgeInsets.all(5.0),
-        prefix: Text(label.toString()),
-        initialValue: initialValue,
-        onChanged: onChanged,
-        placeholder: label!,
+      return Column(
+        children: [
+          CupertinoTextFormFieldRow(
+            padding: const EdgeInsets.all(5.0),
+            prefix: Text(label.toString()),
+            initialValue: initialValue,
+            onChanged: onChanged,
+            placeholder: label!,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, top: 4.0),
+            child: Text(
+              errorText != null ? errorText! : '',
+              style: const TextStyle(
+                  color: CupertinoColors.systemRed, fontSize: 15),
+            ),
+          )
+        ],
       );
     } else {
       return TextFormField(
@@ -29,6 +43,7 @@ class CustomTextField extends StatelessWidget {
         onChanged: onChanged,
         decoration: InputDecoration(
           labelText: label,
+          errorText: errorText,
         ),
       );
     }

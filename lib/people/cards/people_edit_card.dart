@@ -10,12 +10,14 @@ class PeopleEditCard extends StatelessWidget {
     required this.nameOnChanged,
     required this.emailOnChanged,
     required this.detailsOnChanged,
+    required this.errors,
   });
 
   final People people;
   final void Function(String)? nameOnChanged;
   final void Function(String)? emailOnChanged;
   final void Function(String)? detailsOnChanged;
+  final Map<String, String>? errors;
 
   List<Widget> form(People person) {
     return [
@@ -23,18 +25,21 @@ class PeopleEditCard extends StatelessWidget {
         label: "Nome:",
         initialValue: person.name,
         onChanged: nameOnChanged,
+        errorText: errors?['name'],
         //formatter: FilteringTextInputFormatter.digitsOnly,
       ),
       CustomTextField(
         label: "E-mail:",
         initialValue: person.email,
         onChanged: emailOnChanged,
+        errorText: errors?['email'],
         //formatter: FilteringTextInputFormatter.digitsOnly,
       ),
       CustomTextField(
         label: "Detalhes:",
         initialValue: person.details,
         onChanged: detailsOnChanged,
+        errorText: errors?['details'],
         //formatter: FilteringTextInputFormatter.digitsOnly,
       ),
     ];

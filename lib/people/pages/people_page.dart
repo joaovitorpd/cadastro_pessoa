@@ -28,11 +28,13 @@ class PeoplePage extends StatelessWidget {
           case PeopleEditState():
             return PeopleEditPage(
               people: state.people,
+              errors: state.errors,
             );
 
           case PeopleCreateState():
             return PeopleCreatePage(
               people: state.people,
+              errors: state.errors,
             );
 
           case ErrorState():

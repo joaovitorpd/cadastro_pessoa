@@ -40,23 +40,53 @@ class PeopleCubit extends Cubit<PeopleState> {
   }
 
   void createPeople(People people) {
-    var newPeople = peopleRepository.createPeople(pessoa: people);
-    newPeople.then((x) {
-      peopleList.add(x);
-      emit(PeopleDetailState(x));
-    }).catchError((e) {
-      emit(ErrorState(error: e.toString()));
-    });
+    final errors = fieldValidate(people.name, people.email, people.details);
+
+    if (errors.isEmpty) {
+      var newPeople = peopleRepository.createPeople(pessoa: people);
+      newPeople.then((x) {
+        peopleList.add(x);
+        emit(PeopleDetailState(x));
+      }).catchError((e) {
+        emit(ErrorState(error: e.toString()));
+      });
+    } else {
+      emit(PeopleCreateState(people, errors: errors));
+    }
   }
 
   void updatePeople(People people) {
-    var updatedPeople = peopleRepository.updatePeople(pessoa: people);
-    updatedPeople.then((x) {
-      peopleList[peopleList.indexWhere((x) => x.id == people.id)] = x;
-      emit(PeopleDetailState(x));
-    }).catchError((e) {
-      emit(ErrorState(error: e.toString()));
-    });
+    final errors = fieldValidate(people.name, people.email, people.details);
+
+    if (errors.isEmpty) {
+      var updatedPeople = peopleRepository.updatePeople(pessoa: people);
+      updatedPeople.then((x) {
+        peopleList[peopleList.indexWhere((x) => x.id == people.id)] = x;
+        emit(PeopleDetailState(x));
+      }).catchError((e) {
+        emit(ErrorState(error: e.toString()));
+      });
+    } else {
+      emit(PeopleEditState(people, errors: errors));
+    }
+  }
+
+  Map<String, String> fieldValidate(
+      String? name, String? email, String? details) {
+    final errors = <String, String>{};
+
+    if (name == null || name.isEmpty || name.length < 3) {
+      errors['name'] = 'Nome é obrigatório (minimo 3 caracteres)!';
+    }
+
+    if (email == null || !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email)) {
+      errors['email'] = "Email inválido!";
+    }
+
+    if (details == null || details.isEmpty || details.length < 3) {
+      errors['details'] = "Descrição é obrigatória (minimo 3 caracteres)!";
+    }
+    return errors;
   }
 
   void deletePeople(People people) {

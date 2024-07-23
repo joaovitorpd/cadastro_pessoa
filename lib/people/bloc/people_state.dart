@@ -32,21 +32,23 @@ class PeopleDetailState extends PeopleState {
 }
 
 class PeopleEditState extends PeopleState {
-  PeopleEditState(this.people);
+  PeopleEditState(this.people, {this.errors = const {}});
 
   final People people;
+  final Map<String, String>? errors;
 
   @override
-  List<Object?> get props => [people];
+  List<Object?> get props => [people, errors];
 }
 
 class PeopleCreateState extends PeopleState {
-  PeopleCreateState(this.people);
+  PeopleCreateState(this.people, {this.errors = const {}});
 
   final People people;
+  final Map<String, String>? errors;
 
   @override
-  List<Object?> get props => [people];
+  List<Object?> get props => [people, errors];
 }
 
 class ErrorState extends PeopleState {
