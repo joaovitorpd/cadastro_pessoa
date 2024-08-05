@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cadastro_pessoa/people/bloc/people_cubit.dart';
+import 'package:cadastro_pessoa/people/bloc/people_state.dart';
 import 'package:cadastro_pessoa/people/cards/people_edit_card.dart';
 import 'package:cadastro_pessoa/people/models/people.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,15 +11,15 @@ class PeopleEditPage extends StatelessWidget {
   PeopleEditPage({
     super.key,
     required this.people,
-    this.errors,
   });
 
   final People people;
   final People editedPeople = People.empty();
-  final Map<String, String>? errors;
+  final _formKey = GlobalKey<FormState>(debugLabel: 'peopleEditForm');
 
   @override
   Widget build(BuildContext context) {
+    editedPeople.id = people.id;
     editedPeople.name = people.name;
     editedPeople.email = people.email;
     editedPeople.details = people.details;
@@ -26,28 +27,34 @@ class PeopleEditPage extends StatelessWidget {
     if (Platform.isIOS) {
       return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
-          leading: CupertinoButton(
-            padding: const EdgeInsets.all(1),
-            child: const Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
+            leading: CupertinoButton(
+              padding: const EdgeInsets.all(1),
+              child: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                _backButtonPressed(context);
+              },
             ),
-            onPressed: () {
-              _backButtonPressed(context);
-            },
-          ),
-          middle: _titleText(),
-          trailing: CupertinoButton(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.all(0),
-            child: const Text("Salvar"),
-            onPressed: () {
-              _saveButtonOnPressed(context);
-            },
-          ),
-        ),
+            middle: _titleText(),
+            trailing: StreamBuilder<bool>(
+              stream: context.read<PeopleCubit>().isFormValid,
+              builder: (context, snapshot) {
+                return CupertinoButton(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.all(0),
+                  onPressed: snapshot.hasData && snapshot.data == true
+                      ? () {
+                          _saveButtonOnPressed(context);
+                        }
+                      : null,
+                  child: const Text("Salvar"),
+                );
+              },
+            )),
         child: SafeArea(
-          child: _peopleEditCard(),
+          child: _peopleEditCard(context),
         ),
       );
     } else {
@@ -61,24 +68,32 @@ class PeopleEditPage extends StatelessWidget {
             icon: const Icon(Icons.arrow_back),
           ),
         ),
-        body: _peopleEditCard(),
-        floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.save),
-          onPressed: () {
-            _saveButtonOnPressed(context);
+        body: _peopleEditCard(context),
+        floatingActionButton: StreamBuilder<bool>(
+          stream: context.read<PeopleCubit>().isFormValid,
+          builder: (context, snapshot) {
+            return FloatingActionButton(
+              onPressed: snapshot.hasData && snapshot.data == true
+                  ? () {
+                      _saveButtonOnPressed(context);
+                    }
+                  : null,
+              child: const Icon(Icons.save),
+            );
           },
         ),
       );
     }
   }
 
-  Widget _peopleEditCard() {
+  Widget _peopleEditCard(BuildContext context) {
     return PeopleEditCard(
-      nameOnChanged: (value) => editedPeople.name = value,
-      emailOnChanged: (value) => editedPeople.email = value,
-      detailsOnChanged: (value) => editedPeople.details = value,
+      nameOnChanged: (value) => context.read<PeopleCubit>().changeName(value),
+      emailOnChanged: (value) => context.read<PeopleCubit>().changeEmail(value),
+      detailsOnChanged: (value) =>
+          context.read<PeopleCubit>().changeDetails(value),
+      formKey: _formKey,
       people: editedPeople,
-      errors: errors,
     );
   }
 
@@ -90,8 +105,13 @@ class PeopleEditPage extends StatelessWidget {
     context.read<PeopleCubit>().selectDetailsPeople(people);
   }
 
-  void _saveButtonOnPressed(BuildContext context) {
-    editedPeople.id = people.id;
-    context.read<PeopleCubit>().updatePeople(editedPeople);
+  void _saveButtonOnPressed(
+    BuildContext context,
+  ) {
+    // Ensure the latest values are captured by the Cubit
+    context.read<PeopleCubit>().updatePeopleState();
+    var updatedPerson =
+        (context.read<PeopleCubit>().state as PeopleEditState).people;
+    context.read<PeopleCubit>().updatePeople(updatedPerson);
   }
 }

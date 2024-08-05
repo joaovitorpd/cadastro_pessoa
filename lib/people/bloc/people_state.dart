@@ -32,23 +32,67 @@ class PeopleDetailState extends PeopleState {
 }
 
 class PeopleEditState extends PeopleState {
-  PeopleEditState(this.people, {this.errors = const {}});
+  PeopleEditState({
+    required this.people,
+    this.isNameValid = true,
+    this.isEmailValid = true,
+    this.isDetailsValid = true,
+  });
 
   final People people;
-  final Map<String, String>? errors;
+  final bool isNameValid;
+  final bool isEmailValid;
+  final bool isDetailsValid;
+
+  PeopleEditState copyWith({
+    People? people,
+    bool? isNameValid,
+    bool? isEmailValid,
+    bool? isDetailsValid,
+  }) {
+    return PeopleEditState(
+      people: people ?? this.people,
+      isNameValid: isNameValid ?? this.isNameValid,
+      isEmailValid: isEmailValid ?? this.isEmailValid,
+      isDetailsValid: isDetailsValid ?? this.isDetailsValid,
+    );
+  }
 
   @override
-  List<Object?> get props => [people, errors];
+  List<Object?> get props =>
+      [people, isNameValid, isEmailValid, isDetailsValid];
 }
 
 class PeopleCreateState extends PeopleState {
-  PeopleCreateState(this.people, {this.errors = const {}});
+  PeopleCreateState({
+    required this.people,
+    this.isNameValid = true,
+    this.isEmailValid = true,
+    this.isDetailsValid = true,
+  });
 
   final People people;
-  final Map<String, String>? errors;
+  final bool isNameValid;
+  final bool isEmailValid;
+  final bool isDetailsValid;
+
+  PeopleCreateState copyWith({
+    People? people,
+    bool? isNameValid,
+    bool? isEmailValid,
+    bool? isDetailsValid,
+  }) {
+    return PeopleCreateState(
+      people: people ?? this.people,
+      isNameValid: isNameValid ?? this.isNameValid,
+      isEmailValid: isEmailValid ?? this.isEmailValid,
+      isDetailsValid: isDetailsValid ?? this.isDetailsValid,
+    );
+  }
 
   @override
-  List<Object?> get props => [people, errors];
+  List<Object?> get props =>
+      [people, isNameValid, isEmailValid, isDetailsValid];
 }
 
 class ErrorState extends PeopleState {

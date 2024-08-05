@@ -1,4 +1,6 @@
-class People {
+import 'package:equatable/equatable.dart';
+
+class People extends Equatable {
   String? id;
   String? name;
   String? email;
@@ -38,4 +40,21 @@ class People {
       _ => throw const FormatException('Falha ao desserializar Pessoa')
     };
   }
+
+  People copyWith({
+    String? id,
+    String? name,
+    String? email,
+    String? details,
+  }) {
+    return People(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      details: details ?? this.details,
+    );
+  }
+
+  @override
+  List<Object?> get props => [id, name, email, details];
 }

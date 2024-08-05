@@ -29,7 +29,7 @@ class PeopleDetailPage extends StatelessWidget {
                 color: Colors.black,
               ),
               onPressed: () {
-                context.read<PeopleCubit>().loadPeopleList();
+                context.read<PeopleCubit>().selectPeopleList();
               },
             ),
             middle: Text("Detalhes de ${people.name}"),
@@ -54,7 +54,7 @@ class PeopleDetailPage extends StatelessWidget {
           title: Text("Detalhes de ${people.name}"),
           leading: IconButton(
             onPressed: () {
-              context.read<PeopleCubit>().loadPeopleList();
+              context.read<PeopleCubit>().selectPeopleList();
             },
             icon: const Icon(Icons.arrow_back),
           ),

@@ -9,7 +9,7 @@ class PeopleRepository {
   Future<List<People>> fetchPeople() async {
     final response = await http.get(Uri.parse(apiUrl));
     if (response.statusCode == 200) {
-      var jsonBody = jsonDecode(response.body);
+      var jsonBody = jsonDecode(utf8.decode(response.bodyBytes));
 
       var listaPessoa =
           List<People>.from(jsonBody.map((pessoa) => People.fromJson(pessoa)));
@@ -24,12 +24,13 @@ class PeopleRepository {
     final response = await http.post(
       Uri.parse('$apiUrl/'),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-Type': 'application/json',
       },
       body: jsonEncode(pessoa.toJson()),
     );
     if (response.statusCode == 201) {
-      return People.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      return People.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>);
     } else {
       throw Exception('Falha ao criar Pessoa');
     }
@@ -39,12 +40,13 @@ class PeopleRepository {
     final response = await http.put(
       Uri.parse("$apiUrl/${pessoa.id}"),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-Type': 'application/json',
       },
       body: jsonEncode(pessoa.toJson()),
     );
     if (response.statusCode == 200) {
-      return People.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      return People.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>);
     } else {
       throw Exception('Falha ao atualizar Pessoa');
     }
@@ -54,7 +56,7 @@ class PeopleRepository {
     final response = await http.delete(
       Uri.parse("$apiUrl/${pessoa.id}"),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-Type': 'application/json',
       },
     );
     if (response.statusCode != 200) {
