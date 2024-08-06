@@ -110,8 +110,8 @@ class PeopleEditPage extends StatelessWidget {
   ) {
     // Ensure the latest values are captured by the Cubit
     context.read<PeopleCubit>().updatePeopleState();
-    var updatedPerson =
+    var updatedPeople =
         (context.read<PeopleCubit>().state as PeopleEditState).people;
-    context.read<PeopleCubit>().updatePeople(updatedPerson);
+    context.read<PeopleCubit>().updatePeople(updatedPeople);
   }
 }
