@@ -5,6 +5,7 @@ import 'package:cadastro_pessoa/people/pages/people_detail_page.dart';
 import 'package:cadastro_pessoa/people/pages/people_edit_page.dart';
 import 'package:cadastro_pessoa/people/pages/people_error_page.dart';
 import 'package:cadastro_pessoa/people/pages/people_list_page.dart';
+import 'package:cadastro_pessoa/people/pages/people_loading_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,10 +18,10 @@ class PeoplePage extends StatelessWidget {
       builder: (context, state) {
         switch (state) {
           case LoadingState():
-            return const Center(child: CircularProgressIndicator());
+            return const PeopleLoadingPage();
 
           case PeopleListState():
-            return const PeopleListPage();
+            return PeopleListPage();
 
           case PeopleDetailState():
             return PeopleDetailPage(people: state.people);

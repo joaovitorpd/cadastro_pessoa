@@ -9,9 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PeopleListPage extends StatelessWidget {
-  const PeopleListPage({
+  PeopleListPage({
     super.key,
   });
+  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class PeopleListPage extends StatelessWidget {
             },
           ),
         ),
-        child: _peopleListView(),
+        child: _peopleListView(controller: _scrollController),
       );
     } else {
       return Scaffold(
@@ -36,7 +37,7 @@ class PeopleListPage extends StatelessWidget {
         ),
         body: Padding(
           padding: const EdgeInsets.all(5.0),
-          child: _peopleListView(),
+          child: _peopleListView(controller: _scrollController),
         ),
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add),
@@ -48,32 +49,37 @@ class PeopleListPage extends StatelessWidget {
     }
   }
 
-  Widget _peopleListView() {
+  Widget _peopleListView({ScrollController? controller}) {
     double cardHorizontalPadding = 8.0;
     double cardVerticalPadding = 1.0;
     return BlocBuilder<PeopleCubit, PeopleState>(
       builder: (context, state) {
         if (state is PeopleListState) {
-          return ListView.builder(
-            itemCount: state.peopleList.length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  final People people = state.peopleList[index];
-                  context.read<PeopleCubit>().selectDetailsPeople(people);
-                },
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                      cardHorizontalPadding,
-                      cardVerticalPadding,
-                      cardHorizontalPadding,
-                      cardVerticalPadding),
-                  child: PeopleCard(
-                    person: state.peopleList[index],
+          return Scrollbar(
+            thumbVisibility: true,
+            controller: controller,
+            child: ListView.builder(
+              controller: controller,
+              itemCount: state.peopleList.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    final People people = state.peopleList[index];
+                    context.read<PeopleCubit>().selectDetailsPeople(people);
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                        cardHorizontalPadding,
+                        cardVerticalPadding,
+                        cardHorizontalPadding,
+                        cardVerticalPadding),
+                    child: PeopleCard(
+                      person: state.peopleList[index],
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           );
         } else {
           return const Center(

@@ -148,6 +148,7 @@ class PeopleCubit extends Cubit<PeopleState> {
 
   void getPeopleList() {
     emit(LoadingState());
+    Future.delayed(const Duration(microseconds: 1000));
     peopleRepository.fetchPeople().then((x) {
       peopleList = x;
       emit(PeopleListState(peopleList));
