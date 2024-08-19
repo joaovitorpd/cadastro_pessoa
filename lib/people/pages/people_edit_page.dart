@@ -14,16 +14,10 @@ class PeopleEditPage extends StatelessWidget {
   });
 
   final People people;
-  final People editedPeople = People.empty();
   final _formKey = GlobalKey<FormState>(debugLabel: 'peopleEditForm');
 
   @override
   Widget build(BuildContext context) {
-    editedPeople.id = people.id;
-    editedPeople.name = people.name;
-    editedPeople.email = people.email;
-    editedPeople.details = people.details;
-
     if (Platform.isIOS) {
       return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
@@ -87,6 +81,12 @@ class PeopleEditPage extends StatelessWidget {
   }
 
   Widget _peopleEditCard(BuildContext context) {
+    People editedPeople = people.copyWith(
+      id: people.id,
+      name: people.name,
+      email: people.email,
+      details: people.details,
+    );
     return PeopleEditCard(
       nameOnChanged: (value) => context.read<PeopleCubit>().changeName(value),
       emailOnChanged: (value) => context.read<PeopleCubit>().changeEmail(value),

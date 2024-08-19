@@ -132,7 +132,7 @@ class PeopleCubit extends Cubit<PeopleState> {
   // Method to People Creation
 
   void selectCreatePeople() {
-    People people = People.empty();
+    People people = const People.empty();
     changeName(people.name);
     changeEmail(people.email);
     changeDetails(people.details);

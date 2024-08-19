@@ -1,18 +1,22 @@
 import 'package:equatable/equatable.dart';
 
 class People extends Equatable {
-  String? id;
-  String? name;
-  String? email;
-  String? details;
+  final String? id;
+  final String? name;
+  final String? email;
+  final String? details;
 
-  People(
+  const People(
       {required this.id,
       required this.name,
       required this.email,
       required this.details});
 
-  People.empty();
+  const People.empty()
+      : id = null,
+        name = null,
+        email = null,
+        details = null;
 
   Map<String, dynamic> toJson() {
     return {
