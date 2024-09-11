@@ -1,5 +1,5 @@
-import 'package:cadastro_pessoa/people/bloc/people_cubit.dart';
-import 'package:cadastro_pessoa/people/bloc/people_state.dart';
+import 'package:cadastro_pessoa/people/cubit/people_cubit.dart';
+import 'package:cadastro_pessoa/people/cubit/people_state.dart';
 import 'package:cadastro_pessoa/people/models/people.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

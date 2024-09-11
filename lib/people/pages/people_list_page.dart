@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:cadastro_pessoa/people/bloc/people_cubit.dart';
-import 'package:cadastro_pessoa/people/bloc/people_state.dart';
+import 'package:cadastro_pessoa/people/cubit/people_cubit.dart';
+import 'package:cadastro_pessoa/people/cubit/people_state.dart';
 import 'package:cadastro_pessoa/people/cards/people_card.dart';
 import 'package:cadastro_pessoa/people/models/people.dart';
 import 'package:flutter/cupertino.dart';

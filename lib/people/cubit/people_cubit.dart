@@ -1,12 +1,14 @@
 import 'dart:async';
-import 'package:cadastro_pessoa/people/bloc/people_state.dart';
+import 'package:cadastro_pessoa/people/cubit/people_state.dart';
 import 'package:cadastro_pessoa/people/data/people_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart';
 import 'package:rxdart/rxdart.dart';
 import '../models/people.dart';
 
 class PeopleCubit extends Cubit<PeopleState> {
-  PeopleCubit() : super(InitialState()) {
+  PeopleCubit({required this.client, required this.peopleRepository})
+      : super(InitialState()) {
     getPeopleList();
   }
 
@@ -14,7 +16,9 @@ class PeopleCubit extends Cubit<PeopleState> {
   final _emailController = BehaviorSubject<String?>.seeded(null);
   final _detailsController = BehaviorSubject<String?>.seeded(null);
 
-  final peopleRepository = PeopleRepository();
+  final Client client;
+  final PeopleRepository peopleRepository;
+
   late List<People> peopleList;
 
   //Stream getters

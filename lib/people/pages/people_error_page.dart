@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:cadastro_pessoa/people/bloc/people_cubit.dart';
+import 'package:cadastro_pessoa/people/cubit/people_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

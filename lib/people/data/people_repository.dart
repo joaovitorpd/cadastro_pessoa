@@ -1,13 +1,18 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 import 'package:cadastro_pessoa/people/models/people.dart';
 
 class PeopleRepository {
   String apiUrl =
       'https://659d7e20633f9aee790986a9.mockapi.io/api/crud_teste/pessoa';
+
+  final Client client;
+
+  PeopleRepository({required this.client});
+
   Future<List<People>> fetchPeople() async {
-    final response = await http.get(Uri.parse(apiUrl));
+    final response = await client.get(Uri.parse(apiUrl));
     if (response.statusCode == 200) {
       var jsonBody = jsonDecode(utf8.decode(response.bodyBytes));
 
@@ -21,7 +26,7 @@ class PeopleRepository {
   }
 
   Future<People> createPeople({required People pessoa}) async {
-    final response = await http.post(
+    final response = await client.post(
       Uri.parse('$apiUrl/'),
       headers: <String, String>{
         'Content-Type': 'application/json',
@@ -37,7 +42,7 @@ class PeopleRepository {
   }
 
   Future<People> updatePeople({required People pessoa}) async {
-    final response = await http.put(
+    final response = await client.put(
       Uri.parse("$apiUrl/${pessoa.id}"),
       headers: <String, String>{
         'Content-Type': 'application/json',
@@ -53,7 +58,7 @@ class PeopleRepository {
   }
 
   Future<void> deletePeople({required People pessoa}) async {
-    final response = await http.delete(
+    final response = await client.delete(
       Uri.parse("$apiUrl/${pessoa.id}"),
       headers: <String, String>{
         'Content-Type': 'application/json',

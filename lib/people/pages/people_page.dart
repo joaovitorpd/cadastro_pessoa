@@ -1,5 +1,5 @@
-import 'package:cadastro_pessoa/people/bloc/people_cubit.dart';
-import 'package:cadastro_pessoa/people/bloc/people_state.dart';
+import 'package:cadastro_pessoa/people/cubit/people_cubit.dart';
+import 'package:cadastro_pessoa/people/cubit/people_state.dart';
 import 'package:cadastro_pessoa/people/pages/people_create_page.dart';
 import 'package:cadastro_pessoa/people/pages/people_detail_page.dart';
 import 'package:cadastro_pessoa/people/pages/people_edit_page.dart';
