@@ -1,20 +1,15 @@
 import 'dart:io';
-import 'package:cadastro_pessoa/people/cubit/people_cubit.dart';
-import 'package:cadastro_pessoa/people/data/people_repository.dart';
-import 'package:cadastro_pessoa/people/pages/people_page.dart';
+import 'package:cadastro_pessoa/core/services/injection_container.dart';
+import 'package:cadastro_pessoa/src/people/presentation/cubit/people_cubit.dart';
+import 'package:cadastro_pessoa/src/people/presentation/views/people_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart';
 
-void main() {
-  final Client client = Client();
-  final PeopleRepository peopleRepository = PeopleRepository(client: client);
-  runApp(BlocProvider(
-    create: (context) =>
-        PeopleCubit(client: client, peopleRepository: peopleRepository),
-    child: const PeopleRegistrationApp(),
-  ));
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await init();
+  runApp(const PeopleRegistrationApp());
 }
 
 class PeopleRegistrationApp extends StatelessWidget {
@@ -24,20 +19,30 @@ class PeopleRegistrationApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (Platform.isIOS) {
-      return const CupertinoApp(
-        debugShowCheckedModeBanner: false,
-        theme: CupertinoThemeData(brightness: Brightness.light),
-        home: PeoplePage(),
+      return BlocProvider(
+        create: (context) => sl<PeopleCubit>()..getPeople(),
+        child: const CupertinoApp(
+          debugShowCheckedModeBanner: false,
+          theme: CupertinoThemeData(
+            brightness: Brightness.light,
+            applyThemeToAll: true,
+          ),
+          home: PeoplePage(),
+        ),
       );
     } else {
-      return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Cadastro de Pessoas',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
+      return BlocProvider(
+        create: (context) => sl<PeopleCubit>(),
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Cadastro de Pessoas',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          home: const PeoplePage(),
         ),
-        home: const PeoplePage(),
       );
     }
   }
