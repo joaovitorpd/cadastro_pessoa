@@ -20,10 +20,7 @@ class PeopleCreatePage extends StatelessWidget {
         navigationBar: CupertinoNavigationBar(
           leading: CupertinoButton(
             padding: const EdgeInsets.all(1),
-            child: const Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-            ),
+            child: const Text("Cancelar"),
             onPressed: () {
               _backButtonPressed(context);
             },
