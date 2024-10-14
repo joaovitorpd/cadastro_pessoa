@@ -1,18 +1,16 @@
 import 'dart:convert';
+import 'package:cadastro_pessoa/core/utils/constants.dart';
 import 'package:cadastro_pessoa/core/utils/typedef.dart';
 import 'package:cadastro_pessoa/src/people/data/models/people_model.dart';
 import 'package:http/http.dart';
 
 class PeopleApiRepository {
-  String apiUrl =
-      'https://659d7e20633f9aee790986a9.mockapi.io/api/crud_teste/pessoa';
-
   final Client client;
 
   PeopleApiRepository({required this.client});
 
   Future<List<PeopleModel>> fetchPeople() async {
-    final response = await client.get(Uri.parse(apiUrl));
+    final response = await client.get(Uri.parse(kBaseUrl));
     if (response.statusCode == 200) {
       return List<DataMap>.from(
               jsonDecode(utf8.decode(response.bodyBytes)) as List)
@@ -25,7 +23,7 @@ class PeopleApiRepository {
 
   Future<PeopleModel> createPeople({required PeopleModel pessoa}) async {
     final response = await client.post(
-      Uri.parse('$apiUrl/'),
+      Uri.parse('$kBaseUrl/'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -40,7 +38,7 @@ class PeopleApiRepository {
 
   Future<PeopleModel> updatePeople({required PeopleModel pessoa}) async {
     final response = await client.put(
-      Uri.parse("$apiUrl/${pessoa.id}"),
+      Uri.parse("$kBaseUrl/${pessoa.id}"),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -55,7 +53,7 @@ class PeopleApiRepository {
 
   Future<void> deletePeople({required PeopleModel pessoa}) async {
     final response = await client.delete(
-      Uri.parse("$apiUrl/${pessoa.id}"),
+      Uri.parse("$kBaseUrl/${pessoa.id}"),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },

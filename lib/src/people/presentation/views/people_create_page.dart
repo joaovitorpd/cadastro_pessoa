@@ -7,10 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PeopleCreatePage extends StatelessWidget {
-  PeopleCreatePage({super.key, required this.people, this.errors});
+  PeopleCreatePage({
+    super.key,
+    required this.people,
+  });
 
   final People people;
-  final Map<String, String>? errors;
   final _formKey = GlobalKey<FormState>(debugLabel: 'peopleCreateForm');
 
   @override
