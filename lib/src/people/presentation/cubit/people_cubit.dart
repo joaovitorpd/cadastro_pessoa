@@ -130,7 +130,7 @@ class PeopleCubit extends Cubit<PeopleState> {
 
   // Method to select People to be Detailed
 
-  Future<void> selectDetailsPeople(People people) async {
+  Future<void> selectDetailsPeople({required People people}) async {
     var peopleToBeDetailed =
         cubitPeopleList[cubitPeopleList.indexWhere((x) => x.id == people.id)];
     emit(PeopleDetailState(peopleToBeDetailed as PeopleModel));
@@ -138,10 +138,10 @@ class PeopleCubit extends Cubit<PeopleState> {
 
   // Method to select People to be Edited
 
-  Future<void> selectEditPeople(PeopleModel people) async {
-    changeName(people.name!);
-    changeEmail(people.email!);
-    changeDetails(people.details!);
+  Future<void> selectEditPeople({required PeopleModel people}) async {
+    changeName(people.name);
+    changeEmail(people.email);
+    changeDetails(people.details);
     emit(PeopleEditState(people: people));
   }
 
@@ -160,9 +160,7 @@ class PeopleCubit extends Cubit<PeopleState> {
     emit(PeopleListState(cubitPeopleList));
   }
 
-  Future<void> createPeople({
-    required PeopleModel people,
-  }) async {
+  Future<void> createPeople({required PeopleModel people}) async {
     emit(LoadingState());
 
     final result = await _createPeople(CreatePeopleParams(
@@ -178,7 +176,7 @@ class PeopleCubit extends Cubit<PeopleState> {
     );
   }
 
-  Future<void> updatePeople(PeopleModel people) async {
+  Future<void> updatePeople({required PeopleModel people}) async {
     emit(LoadingState());
 
     final result = await _updatePeople(UpdatePeopleParams(people: people));
@@ -193,7 +191,7 @@ class PeopleCubit extends Cubit<PeopleState> {
     );
   }
 
-  Future<void> deletePeople(PeopleModel people) async {
+  Future<void> deletePeople({required PeopleModel people}) async {
     emit(LoadingState());
 
     final result = await _deletePeople(DeletePeopleParams(people: people));

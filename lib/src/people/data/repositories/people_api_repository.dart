@@ -14,13 +14,6 @@ class PeopleApiRepository {
   Future<List<PeopleModel>> fetchPeople() async {
     final response = await client.get(Uri.parse(apiUrl));
     if (response.statusCode == 200) {
-      /* var jsonBody = jsonDecode(utf8.decode(response.bodyBytes));
-
-      var listaPessoa = List<PeopleModel>.from(
-          jsonBody.map((pessoa) => PeopleModel.fromJson(pessoa)));
-
-      return listaPessoa; */
-
       return List<DataMap>.from(
               jsonDecode(utf8.decode(response.bodyBytes)) as List)
           .map((people) => PeopleModel.fromMap(people))

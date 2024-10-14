@@ -21,7 +21,7 @@ class MenuApple extends StatelessWidget {
       itemBuilder: (context) => [
         PullDownMenuItem(
           onTap: () {
-            context.read<PeopleCubit>().selectEditPeople(people);
+            context.read<PeopleCubit>().selectEditPeople(people: people);
           },
           title: "Editar",
           icon: CupertinoIcons.pencil,
@@ -32,7 +32,7 @@ class MenuApple extends StatelessWidget {
                 context, "Atenção!!!", "Tem certeza que deseja apagar?", () {
               Navigator.pop(context);
             }, () {
-              context.read<PeopleCubit>().deletePeople(people);
+              context.read<PeopleCubit>().deletePeople(people: people);
               Navigator.pop(context);
             });
           },

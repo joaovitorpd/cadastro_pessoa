@@ -102,7 +102,7 @@ class PeopleEditPage extends StatelessWidget {
   }
 
   void _backButtonPressed(BuildContext context) {
-    context.read<PeopleCubit>().selectDetailsPeople(people);
+    context.read<PeopleCubit>().selectDetailsPeople(people: people);
   }
 
   void _saveButtonOnPressed(
@@ -112,6 +112,6 @@ class PeopleEditPage extends StatelessWidget {
     context.read<PeopleCubit>().updatePeopleState();
     var updatedPeople =
         (context.read<PeopleCubit>().state as PeopleEditState).people;
-    context.read<PeopleCubit>().updatePeople(updatedPeople);
+    context.read<PeopleCubit>().updatePeople(people: updatedPeople);
   }
 }

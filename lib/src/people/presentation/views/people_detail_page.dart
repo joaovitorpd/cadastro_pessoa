@@ -61,7 +61,7 @@ class PeopleDetailPage extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () {
-                context.read<PeopleCubit>().selectEditPeople(people);
+                context.read<PeopleCubit>().selectEditPeople(people: people);
               },
               child: const Text("Editar"),
             ),
@@ -78,7 +78,7 @@ class PeopleDetailPage extends StatelessWidget {
                       () {
                     Navigator.pop(context);
                   }, () {
-                    context.read<PeopleCubit>().deletePeople(people);
+                    context.read<PeopleCubit>().deletePeople(people: people);
                     Navigator.pop(context);
                   })
                 }),

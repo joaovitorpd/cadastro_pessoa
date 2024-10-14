@@ -26,6 +26,8 @@ void main() {
   late PeopleCubit cubit;
 
   const tCreatePeopleParams = CreatePeopleParams.empty();
+  const tUpdatePeopleParams = UpdatePeopleParams.empty();
+  const tDeletePeopleParams = DeletePeopleParams.empty();
   const tAPIFailure = APIFailure(message: 'message', statusCode: 400);
   const tPeople = PeopleModel.empty();
 
@@ -41,6 +43,8 @@ void main() {
       getPeople: getPeople,
     );
     registerFallbackValue(tCreatePeopleParams);
+    registerFallbackValue(tUpdatePeopleParams);
+    registerFallbackValue(tDeletePeopleParams);
     registerFallbackValue(tPeople);
   });
 
@@ -50,9 +54,36 @@ void main() {
     expect(cubit.state, InitialState());
   });
 
+  group('state changind functions', () {
+    test('selectDetailsPeople should emit [PeopleDetaisState]', () {
+      //act
+      cubit.selectDetailsPeople(people: tPeople);
+
+      expect(cubit.state, PeopleDetailState(tPeople));
+    });
+    test('selectEditPeople should emit [PeopleEditState] when called ', () {
+      //act
+      cubit.selectEditPeople(people: tPeople);
+
+      expect(cubit.state, PeopleEditState(people: tPeople));
+    });
+    test('selectCreatePeople should emit [PeopleCreateState] when called ', () {
+      //act
+      cubit.selectCreatePeople();
+
+      expect(cubit.state, PeopleCreateState(people: tPeople));
+    });
+    test('selectPeopleList should emit [PeopleListState when called]', () {
+      //act
+      cubit.selectPeopleList();
+
+      expect(cubit.state, PeopleListState(const [tPeople]));
+    });
+  });
+
   group('createPeople', () {
     blocTest<PeopleCubit, PeopleState>(
-      'should emit [CreatingPeople, PeopleCreated] when successful.',
+      'should emit [LoadingState, PeopleDetailState] when successful.',
       build: () {
         when(() => createPeople(any())).thenAnswer(
           (_) async => const Right(tPeople),
@@ -73,7 +104,7 @@ void main() {
     );
 
     blocTest<PeopleCubit, PeopleState>(
-      'should emit [CreatingPeople, PeopleError] when unsuccessful',
+      'should emit [LoadingState, PeopleError] when unsuccessful',
       build: () {
         when(() => createPeople(any())).thenAnswer(
           (_) async => const Left(tAPIFailure),
@@ -94,9 +125,89 @@ void main() {
     );
   });
 
+  group('updatePeople', () {
+    blocTest<PeopleCubit, PeopleState>(
+      'should emit [LoadingState, PeopleDetailState] when successful.',
+      build: () {
+        when(() => updatePeople(any()))
+            .thenAnswer((_) async => const Right(tPeople));
+        return cubit;
+      },
+      act: (cubit) => cubit.updatePeople(
+        people: tPeople,
+      ),
+      expect: () => [
+        LoadingState(),
+        PeopleDetailState(tPeople),
+      ],
+      verify: (_) {
+        verify(() => updatePeople(tUpdatePeopleParams)).called(1);
+        verifyNoMoreInteractions(updatePeople);
+      },
+    );
+
+    blocTest<PeopleCubit, PeopleState>(
+      'should emit [LoadingState, PeopleError] when unsuccessful.',
+      build: () {
+        when(() => updatePeople(any()))
+            .thenAnswer((_) async => const Left(tAPIFailure));
+        return cubit;
+      },
+      act: (cubit) => cubit.updatePeople(
+        people: tPeople,
+      ),
+      expect: () => [
+        LoadingState(),
+        PeopleError(message: tAPIFailure.errorMessage),
+      ],
+      verify: (_) {
+        verify(() => updatePeople(tUpdatePeopleParams)).called(1);
+        verifyNoMoreInteractions(updatePeople);
+      },
+    );
+  });
+
+  group('deletePeople', () {
+    blocTest<PeopleCubit, PeopleState>(
+      'should emit [LoadingState, PeopleListState] when successful.',
+      build: () {
+        when(() => deletePeople(any()))
+            .thenAnswer((_) async => const Right(null));
+        return cubit;
+      },
+      act: (cubit) => cubit.deletePeople(people: tPeople),
+      expect: () => [
+        LoadingState(),
+        PeopleListState(const []),
+      ],
+      verify: (_) {
+        verify(() => deletePeople(tDeletePeopleParams)).called(1);
+        verifyNoMoreInteractions(deletePeople);
+      },
+    );
+
+    blocTest<PeopleCubit, PeopleState>(
+      'should emit [LoadingState, PeopleError] when unsuccessful.',
+      build: () {
+        when(() => deletePeople(any()))
+            .thenAnswer((_) async => const Left(tAPIFailure));
+        return cubit;
+      },
+      act: (cubit) => cubit.deletePeople(people: tPeople),
+      expect: () => [
+        LoadingState(),
+        PeopleError(message: tAPIFailure.errorMessage),
+      ],
+      verify: (_) {
+        verify(() => deletePeople(tDeletePeopleParams)).called(1);
+        verifyNoMoreInteractions(deletePeople);
+      },
+    );
+  });
+
   group('getPeople', () {
     blocTest<PeopleCubit, PeopleState>(
-      'shoud emit a [GettingPeople, PeopleLoaded] when successful',
+      'shoud emit a [LoadingState, PeopleListState] when successful',
       build: () {
         when(() => getPeople()).thenAnswer(
           (_) async => const Right([]),
@@ -114,7 +225,7 @@ void main() {
       },
     );
     blocTest<PeopleCubit, PeopleState>(
-      'should emit a [GettingPeople, PeopleError] when unsuccessful',
+      'should emit a [LoadingState, PeopleError] when unsuccessful',
       build: () {
         when(() => getPeople()).thenAnswer(
           (_) async => const Left(tAPIFailure),
