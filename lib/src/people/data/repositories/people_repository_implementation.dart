@@ -15,9 +15,6 @@ class PeopleRepositoryImplementation implements PeopleRepository {
   @override
   ResultFuture<PeopleModel> createPeople({
     required PeopleModel people,
-    /* required String? name,
-    required String? email,
-    required String? details, */
   }) async {
     // Test-Driven Development
     // call the remote data source
@@ -37,10 +34,6 @@ class PeopleRepositoryImplementation implements PeopleRepository {
   @override
   ResultFuture<PeopleModel> updatePeople({
     required PeopleModel people,
-    /* required String? id,
-    required String? name,
-    required String? email,
-    required String? details, */
   }) async {
     try {
       var result = await _remoteDataSource.updatePeople(
@@ -55,7 +48,6 @@ class PeopleRepositoryImplementation implements PeopleRepository {
   @override
   ResultVoid deletePeople({
     required People people,
-    /* required String? id, */
   }) async {
     try {
       final result = await _remoteDataSource.deletePeople(people: people);

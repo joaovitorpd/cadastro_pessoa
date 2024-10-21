@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cadastro_pessoa/core/utils/typedef.dart';
 import 'package:cadastro_pessoa/src/people/domain/entities/people.dart';
 
@@ -16,24 +15,6 @@ class PeopleModel extends People {
 
   factory PeopleModel.fromJson(String source) =>
       PeopleModel.fromMap(jsonDecode(source) as DataMap);
-
-  /* factory PeopleModel.fromJson(DataMap json) {
-    return switch (json) {
-      {
-        'id': String? id,
-        'name': String? name,
-        'email': String? email,
-        'details': String? details,
-      } =>
-        PeopleModel(
-          id: id,
-          name: name,
-          email: email,
-          details: details,
-        ),
-      _ => throw const FormatException('Falha ao desserializar Pessoa')
-    };
-  } */
 
   PeopleModel.fromMap(DataMap map)
       : this(
@@ -65,13 +46,4 @@ class PeopleModel extends People {
       };
 
   String toJson() => jsonEncode(toMap());
-
-  /* DataMap toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'email': email,
-      'details': details,
-    };
-  } */
 }
