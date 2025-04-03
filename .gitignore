@@ -11,6 +11,7 @@
 migrate_working_dir/
 my_key_jvpd
 my_key_jvpd.pub
+lib/core/utils/constants.dart
 
 # IntelliJ related
 *.iml
