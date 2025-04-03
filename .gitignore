@@ -13,6 +13,7 @@
 migrate_working_dir/
 my_key_jvpd
 my_key_jvpd.pub
+pubspec.lock
 /lib/core/utils/constants.dart
 
 # IntelliJ related
